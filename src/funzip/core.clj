@@ -1,4 +1,5 @@
 (ns funzip.core
+  (:refer-clojure :exclude [cycle])
   (:require [clojure.core.match :refer [match]])
   (:import (clojure.lang IPersistentMap)))
 
@@ -63,7 +64,35 @@
                      :right (rest unzipped)
                      :top z))))
 
-(defn rewind-right [z])
+  ; /** Cycle through the moves until a failure is produced and return the last success */
+  ; def cycle(move0: Move[A], moves: Move[A]*): Zipper[A] = {
+  ;   val moveList = move0 :: moves.toList
+  ;   @tailrec def inner(s: List[Move[A]], acc: Zipper[A]): Zipper[A] =
+  ;     s.head(acc) match {
+  ;       case MoveResult.Success(z, _) ⇒ inner(if (s.tail.isEmpty) moveList else s.tail, z)
+  ;       case _ ⇒ acc
+  ;     }
+  ;   inner(moveList, this)
+  ; }
+  
+(defn cycle [z & moves]
+  (loop [mvs moves, acc z]
+    (if (nil? mvs)
+      acc
+      ;else
+      (recur
+        (if (nil? (rest mvs))
+          mvs
+          ;else
+          (rest mvs))
+        z))))
+
+(defn rewind-right [z]
+  (let [right (move-right z)]
+    (if (nil? right)
+      nil
+      ;else
+      (cycle right))))
 
 (defn move-down-right [z]
   (let [down-left (move-down-left z)]
