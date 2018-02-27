@@ -22,4 +22,7 @@
     (let [a (funzip/move-down-left z)
           b (funzip/move-right a)
           c (funzip/move-left b)]
-      (is (= a c)))))
+      (is (= a c))))
+  (testing "Cycling right"
+    (let [a (funzip/move-down-right z)]
+      (is (not (nil? a))))))

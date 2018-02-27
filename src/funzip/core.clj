@@ -80,9 +80,8 @@
 (defn rewind-right [z]
   (cycle z try-move-right))
 
-;   def tryMoveDownRight = tryMoveDownLeft.map(_.rewindRight)
 (defn try-move-down-right [z]
-  (move-result/map (try-move-left z) rewind-right))
+  (move-result/map (try-move-down-left z) rewind-right))
 
 (defn move-down-right [z]
   (move-result/get (try-move-down-right z)))

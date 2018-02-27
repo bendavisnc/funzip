@@ -16,11 +16,20 @@
 
 (describe "funzip spec"
           (it "Should return nil on a failed (impossible) move."
-            (should (nil? (funzip/move-left test-zipper))))
+            (should (nil? (funzip/move-left test-zipper)))
+            (should (not (nil? (-> test-zipper funzip/move-down-left funzip/move-right funzip/move-right))))
+            (should (nil? (-> test-zipper funzip/move-down-left funzip/move-right funzip/move-right funzip/move-right))))
           (it "Should be consistent between moves."
             (let [a (funzip/move-down-left test-zipper)
                   b (funzip/move-right a)
                   c (funzip/move-left b)]
-              (should (= a c)))))
+              (should= a c)))
+          (describe "cycling"
+            (it "Should have the right most value when rewinding right"
+              (let [a (-> test-zipper funzip/move-down-left funzip/move-right funzip/move-right)
+                    b (-> test-zipper funzip/move-down-left funzip/rewind-right)
+                    c (-> test-zipper funzip/move-down-right)]
+                (should= a b)
+                (should= b c)))))
 
 (run-specs)

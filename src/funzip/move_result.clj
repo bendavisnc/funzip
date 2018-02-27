@@ -30,4 +30,6 @@
     (fail? m)
     nil
     (success? m)
-    (f (:zipper m))))
+    (successful-move :zipper (f (:zipper m))
+                     :origin m)))
+
