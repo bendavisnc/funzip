@@ -12,18 +12,22 @@
 (defn failed-move [& {:keys [origin]}]
   (new MoveResult nil, origin, fail))
 
-(defn get [m]
-  (case (:result m)
-    fail nil
-    success (:zipper m)))
-
-(defn map [m, f]
-  (case (:result m)
-    fail nil
-    success (f (:zipper m))))
-
 (defn success? [m]
   (= (:result m) success))
 
 (defn fail? [m]
   (= (:result m) fail))
+
+(defn get [m]
+  (cond
+    (fail? m)
+    nil
+    (success? m)
+    (:zipper m)))
+
+(defn map [m, f]
+  (cond
+    (fail? m)
+    nil
+    (success? m)
+    (f (:zipper m))))

@@ -23,7 +23,7 @@
 
 (defn try-move-left [z]
   (let [[head & tail] (:left z)]
-    (if (nil? tail)
+    (if (nil? head)
       (fail z)
       ;else
       (move-to z
@@ -39,7 +39,7 @@
 
 (defn try-move-right [z]
   (let [[head & tail] (:right z)]
-    (if (nil? tail)
+    (if (nil? head)
       (fail z)
       ;else
       (move-to z
@@ -55,7 +55,7 @@
 
 (defn try-move-down-left [z]
   (let [[head & tail] (unzip (:focus z))]
-    (if (nil? tail)
+    (if (nil? head)
       (fail z)
       ;else
       (move-to z
