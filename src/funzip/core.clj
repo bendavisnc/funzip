@@ -114,10 +114,18 @@
 
 ;; Down - right
 
-
 (defn try-move-down-right [z]
   (move-result/map (try-move-down-left z) rewind-right))
 
 (defn move-down-right [z]
   (move-result/get (try-move-down-right z)))
+
+
+;; Down
+
+(defn try-move-down-at [z, i]
+  (move-result/map (try-move-down-left z) #(move-right-by % i)))
+
+(defn move-down-at [z, i]
+  (move-result/get (try-move-down-at z i)))
 

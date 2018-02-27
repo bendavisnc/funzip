@@ -42,6 +42,12 @@
             (it "Should have the right value relative to the offset given when moving right by"
                 (let [a (-> test-zipper funzip/move-down-right)
                       b (-> test-zipper funzip/move-down-left (funzip/move-right-by 2))]
-                  (should= a b)))))
+                  (should= a b))))
+          (describe "movement"
+            (describe "downward"
+              (it "Should move down one level and to the right by the given index"
+                (let [a (-> test-zipper funzip/move-down-right)
+                      b (-> test-zipper (funzip/move-down-at 2))]
+                  (should= a b))))))
 
 (run-specs)
