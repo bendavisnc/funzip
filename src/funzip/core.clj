@@ -2,14 +2,14 @@
   (:refer-clojure :exclude [cycle])
   (:require [clojure.core.match :refer [match]]
             [funzip.move-result :as move-result]
-            [funzip.zipper :as zipper])
-  (:import (clojure.lang IPersistentMap)))
+            [funzip.zipper :as zipper]
+            [funzip.unzip :refer [unzip, zip]]))
 
 (defn move-to [origin, z]
-  (move-result/success :origin origin, :zipper z))
+  (move-result/successful-move :origin origin, :zipper z))
 
 (defn fail [origin]
-  (move-result/fail :origin origin))
+  (move-result/failed-move :origin origin))
 
 
 ;;
@@ -51,22 +51,39 @@
 (defn move-right [z]
   (move-result/get (try-move-right z)))
 
-  ;/** Unzip the current node and focus on the left child */
-  ;def tryMoveDownLeft = unzip.unzip(focus) match {
-  ;  case head :: tail ⇒
-  ;    moveTo(copy(left = Nil, focus = head, right = tail, top = Some(this)))
-  ;  case Nil ⇒ fail
-  ;}
+;; Down - left
 
-(defn try-move-down [z]
-  (let [[head & tail] (:right z)]
+(defn try-move-down-left [z]
+  (let [[head & tail] (unzip (:focus z))]
     (if (nil? tail)
       (fail z)
       ;else
       (move-to z
-               (zipper/copy-zipper z
-                                   :right tail
-                                   :focus head
-                                   :left (cons (:focus z) (:left z)))))))
+               (zipper/create-zipper :left nil
+                                     :focus head
+                                     :right tail
+                                     :top z)))))
 
+(defn move-down-left [z]
+  (move-result/get (try-move-down-left z)))
+
+;; Down - right
+
+(defn cycle [z, move-fn]
+  (loop [acc z]
+    (let [result (move-fn acc)]
+      (if (move-result/fail? result)
+        acc
+        ;else
+        (recur (move-result/get result))))))
+
+(defn rewind-right [z]
+  (cycle z try-move-right))
+
+;   def tryMoveDownRight = tryMoveDownLeft.map(_.rewindRight)
+(defn try-move-down-right [z]
+  (move-result/map (try-move-left z) rewind-right))
+
+(defn move-down-right [z]
+  (move-result/get (try-move-down-right z)))
 
