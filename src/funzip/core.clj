@@ -1,5 +1,5 @@
 (ns funzip.core
-  (:refer-clojure :exclude [cycle])
+  (:refer-clojure :exclude [cycle, update, set])
   (:require [clojure.core.match :refer [match]]
             [funzip.move-result :as move-result]
             [funzip.zipper :as zipper]
@@ -19,6 +19,9 @@
 ;;
 ;;
 ;; Movement
+
+;;
+;; Utils
 
 (defn cycle [z, move-fn]
   (loop [acc z]
@@ -41,7 +44,18 @@
             (recur (dec n*) (move-result/get result))))))
     z))
 
+(defn tap-focus [z, f]
+  (do
+    (f (:focus z))
+    z))
 
+(defn update [z, f]
+  (zipper/copy-zipper z
+                      :focus (f (:focus z))))
+
+(defn set [z, v]
+  (zipper/copy-zipper z
+                      :focus v))
 
 ;;
 ;; Sideways
@@ -129,3 +143,23 @@
 (defn move-down-at [z, i]
   (move-result/get (try-move-down-at z i)))
 
+
+  ;/** Delete the value in focus and move left */
+  ;def tryDeleteAndMoveLeft = left match {
+  ;  case head :: tail ⇒ moveTo(copy(left = tail, focus = head))
+  ;  case Nil ⇒ fail
+  ;}
+
+(defn try-delete-and-move-left [z]
+  (let [[head & tail] (:left z)]
+    (if (nil? head)
+      (fail z)
+      ;else
+      (move-to z
+               (zipper/create-zipper :left tail
+                                     :focus head)))))
+
+(defn delete-and-move-left [z]
+  (move-result/get (try-delete-and-move-left z)))
+
+;; Up
