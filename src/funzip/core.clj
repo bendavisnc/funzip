@@ -5,6 +5,10 @@
             [funzip.zipper :as zipper]
             [funzip.unzip :refer [unzip, zip]]))
 
+
+(defn stay [z]
+  (move-result/successful-move :origin z, :zipper z))
+
 (defn move-to [origin, z]
   (move-result/successful-move :origin origin, :zipper z))
 
@@ -15,6 +19,29 @@
 ;;
 ;;
 ;; Movement
+
+(defn cycle [z, move-fn]
+  (loop [acc z]
+    (let [result (move-fn acc)]
+      (if (move-result/fail? result)
+        acc
+        ;else
+        (recur (move-result/get result))))))
+
+(defn try-repeat [z, n, move-fn]
+  (move-result/with-origin
+    (loop [n* n, acc z]
+      (if (< n* 1)
+        (stay acc)
+        ;else
+        (let [result (move-fn acc)]
+          (if (move-result/fail? result)
+            result
+            ;else
+            (recur (dec n*) (move-result/get result))))))
+    z))
+
+
 
 ;;
 ;; Sideways
@@ -35,6 +62,15 @@
 (defn move-left [z]
   (move-result/get (try-move-left z)))
 
+(defn rewind-left [z]
+  (cycle z try-move-left))
+
+(defn try-move-left-by [z, n]
+  (try-repeat z, n, try-move-left))
+
+(defn move-left-by [z, n]
+  (move-result/get (try-move-left-by z n)))
+
 ;; Right
 
 (defn try-move-right [z]
@@ -50,6 +86,15 @@
 
 (defn move-right [z]
   (move-result/get (try-move-right z)))
+
+(defn rewind-right [z]
+  (cycle z try-move-right))
+
+(defn try-move-right-by [z, n]
+  (try-repeat z, n, try-move-right))
+
+(defn move-right-by [z, n]
+  (move-result/get (try-move-right-by z n)))
 
 ;; Down - left
 
@@ -69,16 +114,6 @@
 
 ;; Down - right
 
-(defn cycle [z, move-fn]
-  (loop [acc z]
-    (let [result (move-fn acc)]
-      (if (move-result/fail? result)
-        acc
-        ;else
-        (recur (move-result/get result))))))
-
-(defn rewind-right [z]
-  (cycle z try-move-right))
 
 (defn try-move-down-right [z]
   (move-result/map (try-move-down-left z) rewind-right))

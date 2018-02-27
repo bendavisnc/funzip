@@ -25,11 +25,23 @@
                   c (funzip/move-left b)]
               (should= a c)))
           (describe "cycling"
+            (it "Should have the left most value when rewinding left"
+                (let [a (-> test-zipper funzip/move-down-left)
+                      b (-> test-zipper funzip/move-down-right funzip/rewind-left)]
+                  (should= a b)))
+            (it "Should have the left value relative to the offset given when moving left by"
+                (let [a (-> test-zipper funzip/move-down-left)
+                      b (-> test-zipper funzip/move-down-right (funzip/move-left-by 2))]
+                  (should= a b)))
             (it "Should have the right most value when rewinding right"
-              (let [a (-> test-zipper funzip/move-down-left funzip/move-right funzip/move-right)
-                    b (-> test-zipper funzip/move-down-left funzip/rewind-right)
-                    c (-> test-zipper funzip/move-down-right)]
-                (should= a b)
-                (should= b c)))))
+                (let [a (-> test-zipper funzip/move-down-left funzip/move-right funzip/move-right)
+                      b (-> test-zipper funzip/move-down-left funzip/rewind-right)
+                      c (-> test-zipper funzip/move-down-right)]
+                  (should= a b)
+                  (should= b c)))
+            (it "Should have the right value relative to the offset given when moving right by"
+                (let [a (-> test-zipper funzip/move-down-right)
+                      b (-> test-zipper funzip/move-down-left (funzip/move-right-by 2))]
+                  (should= a b)))))
 
 (run-specs)

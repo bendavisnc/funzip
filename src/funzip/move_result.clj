@@ -33,3 +33,13 @@
     (successful-move :zipper (f (:zipper m))
                      :origin m)))
 
+(defn with-origin [m, origin]
+  (cond
+    (fail? m)
+    (failed-move :origin origin)
+    (success? m)
+    (successful-move :zipper (:zipper m)
+                     :origin origin)))
+
+
+
