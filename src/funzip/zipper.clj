@@ -1,5 +1,9 @@
 (ns funzip.zipper)
 
+;;
+;;
+;; Defines a Zipper record and facilities for creation.
+
 (defrecord Zipper [left, focus, right, top])
 
 (defn create-zipper [& {:keys [left, focus, right, top]}]
