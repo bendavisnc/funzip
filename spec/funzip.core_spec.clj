@@ -23,7 +23,9 @@
                        (funzip/move-down-left) (funzip/tap-focus #(should= (:node %) 1221))
                        (funzip/update #(assoc % :node -1)) (funzip/tap-focus #(should= (:node %) -1))
                        (funzip/move-right) (funzip/tap-focus #(should= (:node %) 1222))
-                       (funzip/set {:node -2}) (funzip/tap-focus #(should= (:node %) -2)))])))
+                       (funzip/set {:node -2}) (funzip/tap-focus #(should= (:node %) -2))
+                       (funzip/move-up) (funzip/tap-focus #(should= (:node %) 122))
+                       (funzip/move-up) (funzip/tap-focus #(should= (:node %) 12)))])))
 
 
 

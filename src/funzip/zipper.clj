@@ -6,6 +6,8 @@
 
 (defrecord Zipper [left, focus, right, top])
 
+(def top ::top)
+
 (defn create-zipper [& {:keys [left, focus, right, top]}]
   (new Zipper left, focus, right, top))
 
@@ -13,7 +15,7 @@
   (create-zipper :left nil
                  :focus n
                  :right nil
-                 :top nil))
+                 :top top))
 
 (defn copy-zipper [z & {:keys [left, focus, right, top] :as newz}]
   (-> z
@@ -21,3 +23,6 @@
     (assoc :focus (if (contains? newz :focus) focus (:focus z)))
     (assoc :right (if (contains? newz :right) right (:right z)))
     (assoc :top (if (contains? newz :top) top (:top z)))))
+
+(defn top? [z]
+  (= top (:top z)))

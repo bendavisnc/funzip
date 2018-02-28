@@ -118,10 +118,11 @@
       (fail z)
       ;else
       (move-to z
-               (zipper/create-zipper :left nil
-                                     :focus head
-                                     :right tail
-                                     :top z)))))
+               (zipper/copy-zipper z
+                                   :left nil
+                                   :focus head
+                                   :right tail
+                                   :top z)))))
 
 (defn move-down-left [z]
   (move-result/get (try-move-down-left z)))
@@ -156,10 +157,38 @@
       (fail z)
       ;else
       (move-to z
-               (zipper/create-zipper :left tail
-                                     :focus head)))))
+               (zipper/copy-zipper z
+                                   :left tail
+                                   :focus head)))))
 
 (defn delete-and-move-left [z]
   (move-result/get (try-delete-and-move-left z)))
 
+  ;/** Zip the current layer and move up */
+  ;def tryMoveUp = top.fold(fail) { z ⇒
+  ;  moveTo {
+  ;    z.copy(focus = {
+  ;      val children = (focus :: left) reverse_::: right
+  ;      unzip.zip(z.focus, children)
+  ;    })
+  ;  }
+  ;}
+
 ;; Up
+
+(defn try-move-up [z]
+  (let [head (:top z)]
+    (if (zipper/top? z)
+      (fail z)
+      (move-to z
+               (zipper/copy-zipper head
+                                   :focus (let [children
+                                                 (-> (:focus z)
+                                                     (cons (:left z))
+                                                     (reverse)
+                                                     (concat (:right z)))]
+                                            (zip (:focus head) children)))))))
+
+(defn move-up [z]
+  (move-result/get (try-move-up z)))
+

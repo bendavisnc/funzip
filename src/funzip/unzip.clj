@@ -3,11 +3,11 @@
 
 (defprotocol Unzip
   (unzip [this])
-  (zip [this, node, children]))
+  (zip [this, children]))
 
 (extend-protocol Unzip
   IPersistentMap
   (unzip [this]
     (:children this))
-  (zip [this]
-    nil))
+  (zip [this, children]
+    (assoc this :children children)))
