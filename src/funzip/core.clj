@@ -189,6 +189,31 @@
                                                      (concat (:right z)))]
                                             (zip (:focus head) children)))))))
 
+
 (defn move-up [z]
   (move-result/get (try-move-up z)))
 
+;/** Delete the value in focus and move up */
+;def tryDeleteAndMoveUp = top.fold(fail) { z ⇒
+;  moveTo {
+;    z.copy(focus = {
+;      val children = left reverse_::: right
+;      unzip.zip(z.focus, children)
+;    })
+;  }
+;}
+
+(defn try-delete-and-move-up [z]
+  (let [head (:top z)]
+    (if (zipper/top? z)
+      (fail z)
+      (move-to z
+               (zipper/copy-zipper head
+                                   :focus (let [children
+                                                (-> (:left z)
+                                                    (reverse)
+                                                    (concat (:right z)))]
+                                            (zip (:focus head) children)))))))
+
+(defn delete-and-move-up [z]
+  (move-result/get (try-delete-and-move-up z)))

@@ -25,7 +25,11 @@
                        (funzip/move-right) (funzip/tap-focus #(should= (:node %) 1222))
                        (funzip/set {:node -2}) (funzip/tap-focus #(should= (:node %) -2))
                        (funzip/move-up) (funzip/tap-focus #(should= (:node %) 122))
-                       (funzip/move-up) (funzip/tap-focus #(should= (:node %) 12)))])))
+                       (funzip/move-up) (funzip/tap-focus #(should= (:node %) 12))
+                       (funzip/rewind-left) (funzip/tap-focus #(should= (:node %) 11))
+                       (funzip/move-down-right) (funzip/tap-focus #(should= (:node %) 112))
+                       (funzip/move-left-by 1) (funzip/tap-focus #(should= (:node %) 111))
+                       (funzip/delete-and-move-up) (funzip/tap-focus #(should= (:node %) 11)))])))
 
 
 
