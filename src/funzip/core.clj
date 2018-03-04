@@ -1,7 +1,6 @@
 (ns funzip.core
   (:refer-clojure :exclude [cycle, update, set])
-  (:require [clojure.core.match :refer [match]]
-            [funzip.move-result :as move-result]
+  (:require [funzip.move-result :as move-result]
             [funzip.zipper :as zipper]
             [funzip.unzip :refer [unzip, zip]]))
 

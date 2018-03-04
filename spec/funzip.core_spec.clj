@@ -1,6 +1,9 @@
 (ns funzip.core-spec
   (:require [speclj.core :refer :all]
-            [funzip.core :as funzip]))
+            [funzip.core :as funzip]
+            [orchestra.spec.test :as spec-test]))
+
+(spec-test/instrument)
 
 (def tree {:node 1
            :children [{:node 11

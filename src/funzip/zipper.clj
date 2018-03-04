@@ -1,7 +1,7 @@
 (ns funzip.zipper
   (:require [clojure.spec.alpha :as spec]
-            ;[orchestra.spec.test :as spec-test]))
-            [clojure.spec.test.alpha :as spec-test]))
+            [orchestra.spec.test :as spec-test]))
+            ;[clojure.spec.test.alpha :as spec-test]))
 
 ;;
 ;;
@@ -34,9 +34,8 @@
   (= top (:top z)))
 
 (spec/fdef top?
-           :args (spec/cat :prev-steps zipper?)
-           :ret integer?)
+           :args (spec/cat :z zipper?)
+           :ret boolean?)
 
-(spec-test/instrument)
 
 
