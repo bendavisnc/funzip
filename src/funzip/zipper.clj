@@ -1,10 +1,16 @@
-(ns funzip.zipper)
+(ns funzip.zipper
+  (:require [clojure.spec.alpha :as spec]
+            ;[orchestra.spec.test :as spec-test]))
+            [clojure.spec.test.alpha :as spec-test]))
 
 ;;
 ;;
 ;; Defines a Zipper record and facilities for creation.
 
 (defrecord Zipper [left, focus, right, top])
+
+(defn zipper? [z]
+  (instance? Zipper z))
 
 (def top ::top)
 
@@ -26,3 +32,11 @@
 
 (defn top? [z]
   (= top (:top z)))
+
+(spec/fdef top?
+           :args (spec/cat :prev-steps zipper?)
+           :ret integer?)
+
+(spec-test/instrument)
+
+
