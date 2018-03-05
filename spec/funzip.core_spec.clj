@@ -2,6 +2,7 @@
   (:require [speclj.core :refer :all]
             [funzip.core :as funzip]
             [orchestra.spec.test :as spec-test]
+            [clojure.spec.gen.alpha]
             [funzip.specs.core]
             [funzip.specs.move-result]
             [funzip.specs.zipper]))

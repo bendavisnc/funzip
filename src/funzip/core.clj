@@ -15,7 +15,6 @@
 (defn fail [origin]
   (move-result/failed-move :origin origin))
 
-
 ;;
 ;; Utils
 

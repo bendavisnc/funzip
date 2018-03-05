@@ -34,10 +34,12 @@
            :args (spec/cat :m move-result?)
            :ret (spec/nilable zipper?))
 
+(spec/def ::map-fn (spec/fspec :args (spec/cat :z zipper?)
+                               :ret zipper?))
+
 (spec/fdef funzip.move-result/map
            :args (spec/cat :m move-result?, :f fn?)
            :ret (spec/nilable move-result?))
-
 
 (spec/fdef funzip.move-result/with-origin
            :args (spec/cat :m move-result?, :origin zipper?)
