@@ -1,7 +1,10 @@
 (ns funzip.core-spec
   (:require [speclj.core :refer :all]
             [funzip.core :as funzip]
-            [orchestra.spec.test :as spec-test]))
+            [orchestra.spec.test :as spec-test]
+            [funzip.specs.core]
+            [funzip.specs.move-result]
+            [funzip.specs.zipper]))
 
 (spec-test/instrument)
 

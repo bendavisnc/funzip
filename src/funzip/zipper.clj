@@ -1,5 +1,4 @@
-(ns funzip.zipper
-  (:require [clojure.spec.alpha :as spec]))
+(ns funzip.zipper)
 
 ;;
 ;;
@@ -13,7 +12,7 @@
 (def top ::top)
 
 (defn create-zipper [& {:keys [left, focus, right, top]}]
-  (new Zipper left, focus, right, top))
+  (->Zipper left, focus, right, top))
 
 (defn node->zipper [n]
   (create-zipper :left nil
@@ -30,10 +29,4 @@
 
 (defn top? [z]
   (= top (:top z)))
-
-(spec/fdef top?
-           :args (spec/cat :z zipper?)
-           :ret boolean?)
-
-
 
