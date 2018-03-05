@@ -1,18 +1,31 @@
 (ns funzip.core
   (:refer-clojure :exclude [cycle, update, set])
-  (:require [funzip.move-result :as move-result]
-            [funzip.zipper :as zipper]
-            [funzip.unzip :refer [unzip, zip]]))
+  (:require [funzip.move-result :as move-result :refer [move-result?]]
+            [funzip.zipper :as zipper :refer [zipper?]]
+            [funzip.unzip :refer [unzip, zip]]
+            [clojure.spec.alpha :as spec]))
 
 
 (defn stay [z]
   (move-result/successful-move :origin z, :zipper z))
 
+(spec/fdef stay
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
 (defn move-to [origin, z]
   (move-result/successful-move :origin origin, :zipper z))
 
+(spec/fdef move-to
+           :args (spec/cat :origin zipper? :z zipper?)
+           :ret move-result?)
+
 (defn fail [origin]
   (move-result/failed-move :origin origin))
+
+(spec/fdef fail
+           :args (spec/cat :origin zipper?)
+           :ret move-result?)
 
 
 ;;
@@ -30,6 +43,10 @@
         ;else
         (recur (move-result/get result))))))
 
+(spec/fdef cycle
+           :args (spec/cat :z zipper?, :move-fn fn?)
+           :ret zipper?)
+
 (defn try-repeat [z, n, move-fn]
   (move-result/with-origin
     (loop [n* n, acc z]
@@ -43,19 +60,33 @@
             (recur (dec n*) (move-result/get result))))))
     z))
 
+(spec/fdef try-repeat
+           :args (spec/cat :z zipper?, :n integer?, :move-fn fn?)
+           :ret move-result?)
+
 (defn tap-focus [z, f]
   (do
     (f (:focus z))
     z))
 
+(spec/fdef tap-focus
+           :args (spec/cat :z zipper?, :f fn?)
+           :ret zipper?)
+
 (defn update [z, f]
   (zipper/copy-zipper z
                       :focus (f (:focus z))))
+(spec/fdef update
+           :args (spec/cat :z zipper?, :f fn?)
+           :ret zipper?)
 
 (defn set [z, v]
   (zipper/copy-zipper z
                       :focus v))
 
+(spec/fdef set
+           :args (spec/cat :z zipper?, :v any?)
+           :ret zipper?)
 ;;
 ;; Sideways
 

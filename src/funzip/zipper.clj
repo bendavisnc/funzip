@@ -1,7 +1,5 @@
 (ns funzip.zipper
-  (:require [clojure.spec.alpha :as spec]
-            [orchestra.spec.test :as spec-test]))
-            ;[clojure.spec.test.alpha :as spec-test]))
+  (:require [clojure.spec.alpha :as spec]))
 
 ;;
 ;;
