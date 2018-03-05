@@ -135,6 +135,27 @@
            :args (spec/cat :z zipper?, :n integer?)
            :ret (spec/nilable zipper?))
 
+(defn try-delete-and-move-left [z]
+  (let [[head & tail] (:left z)]
+    (if (nil? head)
+      (fail z)
+      ;else
+      (move-to z
+               (zipper/copy-zipper z
+                                   :left tail
+                                   :focus head)))))
+
+(spec/fdef try-delete-and-move-left
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
+(defn delete-and-move-left [z]
+  (move-result/get (try-delete-and-move-left z)))
+
+(spec/fdef delete-and-move-left
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
+
 ;; Right
 
 (defn try-move-right [z]
@@ -237,26 +258,36 @@
            :args (spec/cat :z zipper?, :i integer?)
            :ret (spec/nilable zipper?))
 
-(defn try-delete-and-move-left [z]
-  (let [[head & tail] (:left z)]
+(defn try-insert-down-left [z, & values]
+  (let [[head & tail] (concat values (unzip (:focus z)))]
     (if (nil? head)
       (fail z)
       ;else
       (move-to z
                (zipper/copy-zipper z
-                                   :left tail
-                                   :focus head)))))
+                                   :left nil
+                                   :focus head
+                                   :right tail
+                                   :top z)))))
 
-(spec/fdef try-delete-and-move-left
-           :args (spec/cat :z zipper?)
-           :ret move-result?)
+(defn insert-down-left [z, & values]
+  (move-result/get (apply try-insert-down-left (cons z values))))
 
-(defn delete-and-move-left [z]
-  (move-result/get (try-delete-and-move-left z)))
 
-(spec/fdef delete-and-move-left
-           :args (spec/cat :z zipper?)
-           :ret (spec/nilable zipper?))
+(defn try-insert-down-right [z, & values]
+  (let [[head & tail] (concat (unzip (:focus z)) values)]
+    (if (nil? head)
+      (fail z)
+      ;else
+      (move-to z
+               (rewind-right (zipper/copy-zipper z
+                                                 :left nil
+                                                 :focus head
+                                                 :right tail
+                                                 :top z))))))
+
+(defn insert-down-right [z, & values]
+  (move-result/get (apply try-insert-down-right (cons z values))))
 
 ;; Up
 
@@ -306,3 +337,8 @@
 (spec/fdef delete-and-move-up
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
+
+(defn commit [z]
+  (:focus (cycle z try-move-up)))
+
+
