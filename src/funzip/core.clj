@@ -103,17 +103,37 @@
                                    :focus head
                                    :right (cons (:focus z) (:right z)))))))
 
+(spec/fdef try-move-left
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
 (defn move-left [z]
   (move-result/get (try-move-left z)))
+
+(spec/fdef move-left
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
 
 (defn rewind-left [z]
   (cycle z try-move-left))
 
+(spec/fdef rewind-left
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
+
 (defn try-move-left-by [z, n]
   (try-repeat z, n, try-move-left))
 
+(spec/fdef try-move-left-by
+           :args (spec/cat :z zipper?, :n integer?)
+           :ret move-result?)
+
 (defn move-left-by [z, n]
   (move-result/get (try-move-left-by z n)))
+
+(spec/fdef move-left-by
+           :args (spec/cat :z zipper?, :n integer?)
+           :ret (spec/nilable zipper?))
 
 ;; Right
 
@@ -128,17 +148,37 @@
                                    :focus head
                                    :left (cons (:focus z) (:left z)))))))
 
+(spec/fdef try-move-right
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
 (defn move-right [z]
   (move-result/get (try-move-right z)))
+
+(spec/fdef move-right
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
 
 (defn rewind-right [z]
   (cycle z try-move-right))
 
+(spec/fdef rewind-right
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
+
 (defn try-move-right-by [z, n]
   (try-repeat z, n, try-move-right))
 
+(spec/fdef try-move-right-by
+           :args (spec/cat :z zipper?, :n integer?)
+           :ret move-result?)
+
 (defn move-right-by [z, n]
   (move-result/get (try-move-right-by z n)))
+
+(spec/fdef move-right-by
+           :args (spec/cat :z zipper?, :n integer?)
+           :ret (spec/nilable zipper?))
 
 ;; Down - left
 
@@ -154,32 +194,48 @@
                                    :right tail
                                    :top z)))))
 
+(spec/fdef try-move-down-left
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
 (defn move-down-left [z]
   (move-result/get (try-move-down-left z)))
+
+(spec/fdef move-down-left
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
 
 ;; Down - right
 
 (defn try-move-down-right [z]
   (move-result/map (try-move-down-left z) rewind-right))
 
+(spec/fdef try-move-down-right
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
 (defn move-down-right [z]
   (move-result/get (try-move-down-right z)))
 
+(spec/fdef move-down-right
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
 
 ;; Down
 
 (defn try-move-down-at [z, i]
   (move-result/map (try-move-down-left z) #(move-right-by % i)))
 
+(spec/fdef try-move-down-at
+           :args (spec/cat :z zipper?, :i integer?)
+           :ret move-result?)
+
 (defn move-down-at [z, i]
   (move-result/get (try-move-down-at z i)))
 
-
-  ;/** Delete the value in focus and move left */
-  ;def tryDeleteAndMoveLeft = left match {
-  ;  case head :: tail ⇒ moveTo(copy(left = tail, focus = head))
-  ;  case Nil ⇒ fail
-  ;}
+(spec/fdef move-down-at
+           :args (spec/cat :z zipper?, :i integer?)
+           :ret (spec/nilable zipper?))
 
 (defn try-delete-and-move-left [z]
   (let [[head & tail] (:left z)]
@@ -191,18 +247,16 @@
                                    :left tail
                                    :focus head)))))
 
+(spec/fdef try-delete-and-move-left
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
 (defn delete-and-move-left [z]
   (move-result/get (try-delete-and-move-left z)))
 
-  ;/** Zip the current layer and move up */
-  ;def tryMoveUp = top.fold(fail) { z ⇒
-  ;  moveTo {
-  ;    z.copy(focus = {
-  ;      val children = (focus :: left) reverse_::: right
-  ;      unzip.zip(z.focus, children)
-  ;    })
-  ;  }
-  ;}
+(spec/fdef delete-and-move-left
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
 
 ;; Up
 
@@ -219,10 +273,16 @@
                                                      (concat (:right z)))]
                                             (zip (:focus head) children)))))))
 
+(spec/fdef try-move-up
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
 
 (defn move-up [z]
   (move-result/get (try-move-up z)))
 
+(spec/fdef move-up
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
 
 (defn try-delete-and-move-up [z]
   (let [head (:top z)]
@@ -236,5 +296,13 @@
                                                     (concat (:right z)))]
                                             (zip (:focus head) children)))))))
 
+(spec/fdef try-delete-and-move-up
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
 (defn delete-and-move-up [z]
   (move-result/get (try-delete-and-move-up z)))
+
+(spec/fdef delete-and-move-up
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))

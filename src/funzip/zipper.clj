@@ -21,12 +21,12 @@
                  :right nil
                  :top top))
 
-(defn copy-zipper [z & {:keys [left, focus, right, top] :as newz}]
+(defn copy-zipper [z & {:keys [left, focus, right, top] :or {left (:left z), focus (:focus z), right (:right z), top (:top z)}}]
   (-> z
-    (assoc :left (if (contains? newz :left) left (:left z)))
-    (assoc :focus (if (contains? newz :focus) focus (:focus z)))
-    (assoc :right (if (contains? newz :right) right (:right z)))
-    (assoc :top (if (contains? newz :top) top (:top z)))))
+      (assoc :left left)
+      (assoc :focus focus)
+      (assoc :right right)
+      (assoc :top top)))
 
 (defn top? [z]
   (= top (:top z)))

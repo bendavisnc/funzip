@@ -26,7 +26,6 @@
            :args (spec/cat :kwargs (spec/keys* :req-un [::zipper ::origin]))
            :ret move-result?)
 
-
 (defn failed-move [& {:keys [origin]}]
   (->MoveResult nil, origin, fail))
 
