@@ -32,10 +32,17 @@
 (defn map [m, f]
   (cond
     (fail? m)
-    nil
+    m
     (success? m)
     (successful-move :zipper (f (:zipper m))
                      :origin (:origin m))))
+
+(defn flatmap [m, f]
+  (cond
+    (fail? m)
+    m
+    (success? m)
+    (f (:zipper m))))
 
 (defn with-origin [m, origin]
   (cond

@@ -39,7 +39,11 @@
 
 (spec/fdef funzip.move-result/map
            :args (spec/cat :m move-result?, :f fn?)
-           :ret (spec/nilable move-result?))
+           :ret move-result?)
+
+(spec/fdef funzip.move-result/flatmap
+           :args (spec/cat :m move-result?, :f fn?)
+           :ret move-result?)
 
 (spec/fdef funzip.move-result/with-origin
            :args (spec/cat :m move-result?, :origin zipper?)

@@ -11,7 +11,6 @@
 (defn move-to [origin, z]
   (move-result/successful-move :origin origin, :zipper z))
 
-
 (defn fail [origin]
   (move-result/failed-move :origin origin))
 
@@ -26,7 +25,6 @@
         ;else
         (recur (move-result/get result))))))
 
-
 (defn try-repeat [z, n, move-fn]
   (move-result/with-origin
     (loop [n* n, acc z]
@@ -40,21 +38,31 @@
             (recur (dec n*) (move-result/get result))))))
     z))
 
+(defn repeat [z, n, move-fn]
+  (move-result/get (try-repeat z n move-fn)))
 
 (defn tap-focus [z, f]
   (do
     (f (:focus z))
     z))
 
-
-
 (defn set [z, v]
   (zipper/copy-zipper z
                       :focus v))
 
 (defn update [z, f]
-  (zipper/copy-zipper z
-                      :focus (f (:focus z))))
+  (clojure.core/update z :focus f))
+
+(defn first-success [z & moves]
+  (loop [moves* moves, acc nil]
+    (cond
+      (and acc (move-result/success? acc))
+      acc
+      (empty? moves*)
+      (fail z)
+      :else
+      (recur (rest moves*)
+             ((first moves*) z)))))
 
 ;;
 ;;
@@ -244,6 +252,19 @@
 (defn delete-and-move-up [z]
   (move-result/get (try-delete-and-move-up z)))
 
+;; Traversal
+
+(defn try-advance-left-depth-first [z]
+  (first-success z try-move-down-right, try-move-left, #(move-result/flatmap (try-move-up %) try-move-left)))
+
+(defn advance-left-depth-first [z]
+  (move-result/get (try-advance-left-depth-first z)))
+
+(defn try-advance-right-depth-first [z]
+  (first-success z try-move-down-left, try-move-right, #(move-result/flatmap (try-move-up %) try-move-right)))
+
+(defn advance-right-depth-first [z]
+  (move-result/get (try-advance-right-depth-first z)))
 
 (defn commit [z]
   (:focus (cycle z try-move-up)))

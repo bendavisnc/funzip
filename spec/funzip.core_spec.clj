@@ -50,7 +50,21 @@
                                                        :children [{:node -1} {:node -2}]}]}
                               {:node 13,
                                :children [{:node 131} {:node 132}]}]}
-                  modified))))
+                  modified)))
 
+  (it "Should support depth first traversal"
+    (-> (funzip.zipper/node->zipper tree)
+        (funzip/advance-right-depth-first) (funzip/tap-focus #(should= 11 (:node %)))
+        (funzip/advance-right-depth-first) (funzip/tap-focus #(should= 111 (:node %)))
+        (funzip/advance-right-depth-first) (funzip/tap-focus #(should= 112 (:node %)))
+        (funzip/advance-right-depth-first) (funzip/tap-focus #(should= 12 (:node %))))
+    (-> (funzip.zipper/node->zipper tree)
+        (funzip/advance-left-depth-first) (funzip/tap-focus #(should= 13 (:node %)))
+        (funzip/advance-left-depth-first) (funzip/tap-focus #(should= 12 (:node %)))
+        (funzip/advance-left-depth-first) (funzip/tap-focus #(should= 123 (:node %)))
+        (funzip/advance-left-depth-first) (funzip/tap-focus #(should= 122 (:node %)))
+        (funzip/advance-left-depth-first) (funzip/tap-focus #(should= 1222 (:node %)))
+        (funzip/advance-left-depth-first) (funzip/tap-focus #(should= 1221 (:node %)))
+        (funzip/advance-left-depth-first) (funzip/tap-focus #(should= 121 (:node %))))))
 
 (run-specs)

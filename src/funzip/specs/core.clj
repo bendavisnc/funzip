@@ -24,6 +24,10 @@
            :args (spec/cat :z zipper?, :n integer?, :move-fn fn?)
            :ret move-result?)
 
+(spec/fdef funzip.core/repeat
+           :args (spec/cat :z zipper?, :n integer?, :move-fn fn?)
+           :ret (spec/nilable zipper?))
+
 (spec/fdef funzip.core/tap-focus
            :args (spec/cat :z zipper?, :f fn?)
            :ret zipper?)
@@ -123,4 +127,19 @@
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
+(spec/fdef funzip.core/try-advance-left-depth-first
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
+(spec/fdef funzip.core/advance-left-depth-first
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
+
+(spec/fdef funzip.core/try-advance-right-depth-first
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
+(spec/fdef funzip.core/advance-right-depth-first
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
 
