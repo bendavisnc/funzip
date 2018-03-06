@@ -135,11 +135,11 @@
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
-(spec/fdef funzip.core/try-advance-right-depth-first
+(spec/fdef funzip.core/try-advance-preorder-depth-first
            :args (spec/cat :z zipper?)
            :ret move-result?)
 
-(spec/fdef funzip.core/advance-right-depth-first
+(spec/fdef funzip.core/advance-preorder-depth-first
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 

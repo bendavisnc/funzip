@@ -1,8 +1,8 @@
 (ns funzip.core
-  (:refer-clojure :exclude [cycle, update, set])
+  (:refer-clojure :exclude [cycle, update, set, repeat, into])
   (:require [funzip.move-result :as move-result :refer [move-result?]]
             [funzip.zipper :as zipper :refer [zipper?]]
-            [funzip.unzip :refer [unzip, zip]]))
+            [funzip.unzip :refer [unzip, zip, node]]))
 
 
 (defn stay [z]
@@ -254,19 +254,51 @@
 
 ;; Traversal
 
-(defn try-advance-left-depth-first [z]
-  (first-success z try-move-down-right, try-move-left, #(move-result/flatmap (try-move-up %) try-move-left)))
-
-(defn advance-left-depth-first [z]
-  (move-result/get (try-advance-left-depth-first z)))
-
-(defn try-advance-right-depth-first [z]
+(defn try-advance-preorder-depth-first [z]
   (first-success z try-move-down-left, try-move-right, #(move-result/flatmap (try-move-up %) try-move-right)))
 
-(defn advance-right-depth-first [z]
-  (move-result/get (try-advance-right-depth-first z)))
+(defn advance-preorder-depth-first [z]
+  (move-result/get (try-advance-preorder-depth-first z)))
+
+(defn try-advance-postorder-depth-first [z]
+  (first-success z try-move-right, try-move-up))
+
+(defn advance-postorder-depth-first [z]
+  (move-result/get (try-advance-postorder-depth-first z)))
 
 (defn commit [z]
   (:focus (cycle z try-move-up)))
+
+(defn preorder-seq [z]
+  (letfn [(->seq* [m]
+            (if (move-result/fail? m)
+              nil
+              ;else
+              (let [z* (move-result/get m)]
+                (lazy-seq (cons (:focus z*)
+                                (->seq* (try-advance-preorder-depth-first z*)))))))]
+    (->seq* (stay z))))
+
+(defn postorder-seq [z]
+  (letfn [(->seq* [m]
+            (if (move-result/fail? m)
+              nil
+              ;else
+              (let [z* (move-result/get m)]
+                (lazy-seq (cons (:focus z*)
+                                (->seq* (try-advance-postorder-depth-first z*)))))))]
+    (->seq* (stay (cycle z try-move-down-left)))))
+
+(defn into [z, n]
+  (loop [acc (zipper/node->zipper n) m (stay z)]
+    (cond
+      (move-result/fail? m)
+      (commit acc)
+      :else
+      (recur
+        (insert-down-left
+          (set acc (-> m move-result/get node))
+          n)
+        (try-advance-preorder-depth-first m)))))
 
 
