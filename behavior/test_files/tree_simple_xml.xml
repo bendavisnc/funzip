@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<Tree>
+    <RootVal>1</RootVal>
+    <Children>
+        <Tree>
+            <RootVal>2</RootVal>
+            <Children>
+                <Tree>
+                    <RootVal>4</RootVal>
+                    <RootVal>5</RootVal>
+                </Tree>
+            </Children>
+        </Tree>
+        <Tree>
+            <RootVal>3</RootVal>
+        </Tree>
+    </Children>
+</Tree>

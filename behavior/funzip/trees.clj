@@ -26,3 +26,22 @@
                         [122, [[1221], [1222]]]
                         [123]]]
                   [13]]])
+
+
+(def tree-map-modded {:node 1,
+                      :children [{:node 11,
+                                  :children [{:node 112} {:node 113} {:node 114}]}
+                                 {:node 12,
+                                  :children [{:node 121}
+                                             {:node 122,
+                                              :children [{:node -1} {:node -2}]}]}
+                                 {:node 13,
+                                  :children [{:node 131} {:node 132}]}]})
+
+
+(def tree-vec-modded [1 [[11, [[112], [113], [114]]]
+                         [12, [[121],
+                               [122, [[-1], [-2]]]]]
+                         [13, [[131], [132]]]]])
+
+
