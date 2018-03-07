@@ -7,47 +7,23 @@
             [funzip.specs.core]
             [funzip.specs.move-result]
             [funzip.specs.zipper]
-            [funzip.unzip :refer [Unzip]]
             [funzip.traversal-utils :as traversal-utils]
-            [funzip.trees :refer :all])
-  (:import (clojure.lang IPersistentMap PersistentStructMap)))
+            [funzip.trees :refer :all]
+            [funzip.tree-protocol-example-exts]
+            [funzip.test-utils :refer [get-xml-node, create-xml-node, update-xml-node]]))
 
 (spec-test/instrument)
 
-(extend-type IPersistentMap
-  Unzip
-  (unzip [this]
-    (:children this))
-  (zip [this, children]
-    (assoc this :children children)))
-
-(extend-type PersistentStructMap
-  Unzip
-  (unzip [this]
-    (when (-> this xml/content second)
-      (-> this xml/content second xml/content)))
-  (zip [this, children]
-    (assoc-in this [:content 1 :content] (vec children))))
 
 (describe "funzip spec"
           (it "Should perform basic operations correctly"
-              (doseq [[raw-tree, raw-tree-after, get-node, create-node, update-node] [
-                                                                                      [tree-vec, tree-vec-modded, first, #(assoc [] 0 %), #(assoc %1 0 %2)]
+              (doseq [[raw-tree, raw-tree-after, get-node, create-node, update-node] [[tree-vec, tree-vec-modded, first, #(assoc [] 0 %), #(assoc %1 0 %2)]
                                                                                       [tree-map, tree-map-modded, :node, #(assoc {} :node %), #(assoc %1 :node %2)]
                                                                                       [(-> "./behavior/test_files/tree_xml.xml" clojure.java.io/file xml/parse),
-                                                                                       ;(-> "./behavior/test_files/tree_xml_less_modded.xml" clojure.java.io/file xml/parse),
                                                                                        (-> "./behavior/test_files/tree_xml_modded.xml" clojure.java.io/file xml/parse),
-                                                                                       #(-> % xml/content first xml/content first Integer/parseInt),
-                                                                                       #(assoc-in (into (struct-map xml/element) {:tag
-                                                                                                                                  :Tree,
-                                                                                                                                  :attrs nil,
-                                                                                                                                  :content [(into (struct-map xml/element) {:tag
-                                                                                                                                                                            :RootVal,
-                                                                                                                                                                            :attrs nil,
-                                                                                                                                                                            :content []})]})
-                                                                                                  [:content 0 :content 0]
-                                                                                                  (str %1)),
-                                                                                       #(assoc-in %1 [:content 0 :content 0] (str %2))]]]
+                                                                                       get-xml-node
+                                                                                       create-xml-node
+                                                                                       update-xml-node]]]
 
                  (let [modified (-> (funzip.zipper/node->zipper raw-tree)
                                     (funzip/move-down-at 1)                                           (funzip/tap-focus #(should= 12 (get-node %)))
@@ -90,9 +66,5 @@
                          (->> tree-map funzip.zipper/node->zipper funzip/preorder-seq (map :node))))))
 
 (run-specs)
-
-
-
-
 
 
