@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [cycle, update, set, repeat, into])
   (:require [funzip.move-result :as move-result :refer [move-result?]]
             [funzip.zipper :as zipper :refer [zipper?]]
-            [funzip.unzip :refer [unzip, zip, node]]))
+            [funzip.unzip :refer [unzip, zip]]))
 
 
 (defn stay [z]
@@ -288,17 +288,4 @@
                 (lazy-seq (cons (:focus z*)
                                 (->seq* (try-advance-postorder-depth-first z*)))))))]
     (->seq* (stay (cycle z try-move-down-left)))))
-
-(defn into [z, n]
-  (loop [acc (zipper/node->zipper n) m (stay z)]
-    (cond
-      (move-result/fail? m)
-      (commit acc)
-      :else
-      (recur
-        (insert-down-left
-          (set acc (-> m move-result/get node))
-          n)
-        (try-advance-preorder-depth-first m)))))
-
 

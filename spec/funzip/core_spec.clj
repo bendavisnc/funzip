@@ -18,12 +18,7 @@
   (unzip [this]
     (:children this))
   (zip [this, children]
-    (assoc this :children children))
-  (node
-    ([this]
-     (:node this))
-    ([this, v]
-     (assoc this :node v))))
+    (assoc this :children children)))
 
 
 (describe "funzip spec"

@@ -3,17 +3,12 @@
 
 (defprotocol Unzip
   (unzip [this])
-  (zip [this, children])
-  (node [this] [this v]))
+  (zip [this, children]))
 
 (extend-type IPersistentVector
   Unzip
   (unzip [this]
     (second this))
   (zip [this, children]
-    (assoc this 1 children))
-  (node
-    ([this]
-     (first this))
-    ([this, v]
-     (assoc this 0 v))))
+    (assoc this 1 children)))
+
