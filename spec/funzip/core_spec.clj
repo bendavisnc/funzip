@@ -7,7 +7,8 @@
             [funzip.specs.move-result]
             [funzip.specs.zipper]
             [funzip.unzip :refer [Unzip]]
-            [funzip.playground :as playground])
+            [funzip.traversal-utils :as traversal-utils]
+            [funzip.trees :refer :all])
   (:import (clojure.lang IPersistentMap)))
 
 (spec-test/instrument)
@@ -23,26 +24,6 @@
      (:node this))
     ([this, v]
      (assoc this :node v))))
-
-(def tree-a {:node 1 :children [{:node 2,
-                                 :children [{:node 4}, {:node 5}],}
-                                {:node 3}]})
-
-(def tree-a2 [1, [[2, [[4], [5]]]
-                  [3]]])
-
-(def tree-a2-mirrored [1, [[3],
-                           [2, [[5], [4]]]]])
-
-(def tree-b {:node   1
-             :children [{:node 11
-                         :children [{:node 111}, {:node 112}]},
-                        {:node 12
-                         :children [{:node 121},
-                                    {:node 122
-                                     :children [{:node 1221}, {:node 1222}]}
-                                    {:node 123}]},
-                        {:node 13}]})
 
 
 (describe "funzip spec"
@@ -81,7 +62,24 @@
         (funzip/advance-preorder-depth-first) (funzip/tap-focus #(should= 2 (:node %)))
         (funzip/advance-preorder-depth-first) (funzip/tap-focus #(should= 4 (:node %)))
         (funzip/advance-preorder-depth-first) (funzip/tap-focus #(should= 5 (:node %)))
-        (funzip/advance-preorder-depth-first) (funzip/tap-focus #(should= 3 (:node %))))))
+        (funzip/advance-preorder-depth-first) (funzip/tap-focus #(should= 3 (:node %))))
+    (should (= [1 2 4 5 3]
+               (traversal-utils/preorder tree-a2)
+               (->> tree-a2 funzip.zipper/node->zipper funzip/preorder-seq (map first))
+               (->> tree-a funzip.zipper/node->zipper funzip/preorder-seq (map :node))))
+    (should (= [1 3 2 5 4]
+               (traversal-utils/preorder tree-a2-mirrored)
+               (->> tree-a2-mirrored funzip.zipper/node->zipper funzip/preorder-seq (map first))))
+    (should (= [1 11 111 112 12 121 122 1221 1222 123 13]
+               (traversal-utils/preorder tree-b2)
+               (->> tree-b2 funzip.zipper/node->zipper funzip/preorder-seq (map first))
+               (->> tree-b funzip.zipper/node->zipper funzip/preorder-seq (map :node))))
+    (should (= [4 5 2 3 1]
+               (traversal-utils/postorder tree-a2)
+               (->> tree-a2 funzip.zipper/node->zipper funzip/postorder-seq (map first))))
+    (should= [3 5 4 2 1]
+             ;(traversal-utils/postorder tree-a2-mirrored)
+             (->> tree-a2-mirrored funzip.zipper/node->zipper funzip/postorder-seq (map first)))))
 
 ;(def stupid-seq (funzip/preorder-seq (funzip.zipper/node->zipper tree-a2)))
 
@@ -94,7 +92,5 @@
 ;               []))
 ;
 ;(stupid-test2)
-
-(playground/lazy-postorder tree-a2)
 
 (run-specs)
