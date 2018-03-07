@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"], [orchestra "2017.11.12-1"]]
   :profiles {:dev {:dependencies [[speclj "3.3.0"]]
                    :repl-options {:init-ns funzip.core-spec}
-                   :test-paths ["spec"]}}
+                   :test-paths ["behavior"]}}
   :plugins [[speclj "3.3.0"], [lein-auto "0.1.3"]]
   :aliases {"test-continuously" ["auto" "spec" "-f" "d"]})
 

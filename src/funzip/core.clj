@@ -260,12 +260,6 @@
 (defn advance-preorder-depth-first [z]
   (move-result/get (try-advance-preorder-depth-first z)))
 
-(defn try-advance-postorder-depth-first [z]
-  (first-success z try-move-right, try-move-up))
-
-(defn advance-postorder-depth-first [z]
-  (move-result/get (try-advance-postorder-depth-first z)))
-
 (defn commit [z]
   (:focus (cycle z try-move-up)))
 
@@ -279,13 +273,4 @@
                                 (->seq* (try-advance-preorder-depth-first z*)))))))]
     (->seq* (stay z))))
 
-(defn postorder-seq [z]
-  (letfn [(->seq* [m]
-            (if (move-result/fail? m)
-              nil
-              ;else
-              (let [z* (move-result/get m)]
-                (lazy-seq (cons (:focus z*)
-                                (->seq* (try-advance-postorder-depth-first z*)))))))]
-    (->seq* (stay (cycle z try-move-down-left)))))
 
