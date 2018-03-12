@@ -1,12 +1,12 @@
-(ns funzip.unzip
+(ns funzip.protocols
   (:import (clojure.lang IPersistentVector)))
 
-(defprotocol Unzip
+(defprotocol CanBeZipper
   (unzip [this])
   (zip [this, children]))
 
 (extend-type IPersistentVector
-  Unzip
+  CanBeZipper
   (unzip [this]
     (second this))
   (zip [this, children]

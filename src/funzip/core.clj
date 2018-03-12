@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [cycle, update, set, repeat, into])
   (:require [funzip.move-result :as move-result :refer [move-result?]]
             [funzip.zipper :as zipper :refer [zipper?]]
-            [funzip.unzip :refer [unzip, zip]]))
+            [funzip.protocols :refer [unzip, zip]]))
 
 
 (defn stay [z]
