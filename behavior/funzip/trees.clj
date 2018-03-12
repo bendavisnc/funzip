@@ -45,3 +45,27 @@
                          [13, [[131], [132]]]]])
 
 
+(def tree-map-super-complex {:node :process-tree,
+                             :children [{:node {:dir-key :important, :dir-name "important_directory"},
+                                         :children
+                                               [{:node [500 500]
+                                                 :children [{:node "helga.svg"} {:node "pookie.svg"}]}
+                                                {:node [400 400]
+                                                 :children [{:node "helga.svg"} {:node "pookie.svg"}],}]}
+
+                                        {:node {:dir-key :super-important, :dir-name "super_important_directory"},
+                                         :children [{:node [1500 1500]
+                                                     :children [{:node "pookie.svg"}]}]}
+                                        {:node {:dir-key :lots-o-sizes,
+                                                :dir-name "super_important_directory/small"},
+                                         :children [{:node [50 50]
+                                                     :children [{:node "pookie.svg"}]},
+                                                    {:node [100 100]
+                                                     :children [{:node "pookie.svg"}]}]}
+                                        {:node {:dir-key :lots-o-sizes, :dir-name "super_important_directory/mid"},
+                                         :children [{:node [200 200]
+                                                     :children [{:node "pookie.svg"}],}]}
+                                        {:node {:dir-key :lots-o-sizes,
+                                                :dir-name "super_important_directory/large"},
+                                         :children [{:node [600 600]
+                                                     :children [{:node "pookie.svg"}],}]}]})

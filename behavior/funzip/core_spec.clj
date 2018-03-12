@@ -64,6 +64,8 @@
                          (traversal-utils/preorder tree-vec)
                          (->> tree-vec funzip.zipper/node->zipper funzip/preorder-seq (map first))
                          (->> tree-map funzip.zipper/node->zipper funzip/preorder-seq (map :node))))))
+              ;(should= [1 11 111 112 12 121 122 1221 1222 123 13]
+              ;         (->> tree-map-super-complex funzip.zipper/node->zipper funzip/preorder-seq (map :node))))))
 
 (run-specs)
 
