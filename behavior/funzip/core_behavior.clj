@@ -1,4 +1,4 @@
-(ns funzip.core-spec
+(ns funzip.core-behavior
   (:require [speclj.core :refer :all]
             [funzip.core :as funzip]
             [orchestra.spec.test :as spec-test]
