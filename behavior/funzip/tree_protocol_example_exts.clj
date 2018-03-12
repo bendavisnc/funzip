@@ -1,6 +1,6 @@
 (ns funzip.tree-protocol-example-exts
   (:require [clojure.xml :as xml]
-            [funzip.protocols :refer [CanBeZipper]])
+            [funzip.protocols :refer [CanBeZipper, CanReflectZipper]])
   (:import (clojure.lang IPersistentMap PersistentStructMap)))
 
 (extend-type IPersistentMap
@@ -8,7 +8,15 @@
   (unzip [this]
     (:children this))
   (zip [this, children]
-    (assoc this :children children)))
+    (assoc this :children children))
+  CanReflectZipper
+  (node
+    ([this]
+     (:node this))
+    ([this, v]
+     (assoc this :node v)))
+  (children [this]
+    (:children this)))
 
 (extend-type PersistentStructMap
   CanBeZipper

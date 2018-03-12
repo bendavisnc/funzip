@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [cycle, update, set, repeat, into])
   (:require [funzip.move-result :as move-result :refer [move-result?]]
             [funzip.zipper :as zipper :refer [zipper?]]
-            [funzip.protocols :refer [unzip, zip]]))
+            [funzip.protocols :refer [unzip, zip, node, children]]))
 
 
 (defn stay [z]
@@ -273,4 +273,24 @@
                                 (->seq* (try-advance-preorder-depth-first z*)))))))]
     (->seq* (stay z))))
 
+
+(defn into [z, to]
+  (let [z-to (-> to
+                 (zipper/node->zipper)
+                 (set (node to (node (:focus z)))))]
+    (loop [z* z, z-to* z-to]
+      (let [next-z* (advance-preorder-depth-first z*)]
+        (assert (= (-> z* :focus node)
+                   (-> z-to* :focus node)))
+        (assert (not (nil? z-to*)))
+        (cond
+          (nil? next-z*)
+          (commit z-to*)
+          (empty? (children (:focus z*)))
+          (recur next-z*
+                 (advance-preorder-depth-first z-to*))
+          :else
+          (recur next-z*
+                 (advance-preorder-depth-first (move-up (apply insert-down-left
+                                                               (cons z-to* (map (partial node to) (map node (children (:focus z*))))))))))))))
 

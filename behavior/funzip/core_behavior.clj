@@ -9,8 +9,10 @@
             [funzip.specs.zipper]
             [funzip.traversal-utils :as traversal-utils]
             [funzip.trees :refer :all]
+            [funzip.protocols :refer [node, children]]
             [funzip.tree-protocol-example-exts]
-            [funzip.test-utils :refer [get-xml-node, create-xml-node, update-xml-node]]))
+            [funzip.test-utils :refer [get-xml-node, create-xml-node, update-xml-node]]
+            [funzip.zipper :as zipper]))
 
 (spec-test/instrument)
 
@@ -63,10 +65,23 @@
               (should (= [1 11 111 112 12 121 122 1221 1222 123 13]
                          (traversal-utils/preorder tree-vec)
                          (->> tree-vec funzip.zipper/node->zipper funzip/preorder-seq (map first))
-                         (->> tree-map funzip.zipper/node->zipper funzip/preorder-seq (map :node))))))
-              ;(should= [1 11 111 112 12 121 122 1221 1222 123 13]
-              ;         (->> tree-map-super-complex funzip.zipper/node->zipper funzip/preorder-seq (map :node))))))
+                         (->> tree-map funzip.zipper/node->zipper funzip/preorder-seq (map :node)))))
+          ;(should= [1 11 111 112 12 121 122 1221 1222 123 13]
+          ;         (->> tree-map-super-complex funzip.zipper/node->zipper funzip/preorder-seq (map :node))))))
+          (describe "funzip/into"
+                    (it "Can be used to convert from one zipper data structure to another"
+                        (should=
+                          tree-simple-vec
+                          (funzip/into (zipper/node->zipper tree-simple-map) []))
+                        (should=
+                          tree-simple-map
+                          (funzip/into (zipper/node->zipper tree-simple-vec) {}))
+                        (should=
+                          tree-vec
+                          (funzip/into (zipper/node->zipper tree-map) [])))))
+
 
 (run-specs)
 
 
+(funzip/into (funzip.zipper/node->zipper tree-simple-map) [])
