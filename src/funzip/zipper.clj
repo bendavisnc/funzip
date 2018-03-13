@@ -20,7 +20,7 @@
     (let [{:keys [left, focus, right, top] :or {top funzip.zipper/top}} args]
       (->Zipper left, focus, right, top))
     (= 1 (count args))
-    (create-zipper :focus (first args))
+    (create-zipper :focus [(first args)]) ; default collection type = vector
     :else
       (throw (new IllegalArgumentException (str "Don't know how to create zipper with " args)))))
 
