@@ -5,7 +5,7 @@
   (unzip [this])
   (zip [this, children]))
 
-(defprotocol CanReflectZipper
+(defprotocol CanConvertZipper
   (node [this], [this, v])
   (children [this]))
 
@@ -17,7 +17,7 @@
   (zip [this, children]
     (assoc this 1 (vec children)))
 
-  CanReflectZipper
+  CanConvertZipper
   (node
     ([this]
      (first this))
