@@ -291,9 +291,6 @@
                  (set (node to (node (:focus z)))))]
     (loop [z* z, z-to* z-to]
       (let [next-z* (advance-preorder-depth-first z*)]
-        (assert (= (-> z* :focus node)
-                   (-> z-to* :focus node)))
-        (assert (not (nil? z-to*)))
         (cond
           (nil? next-z*)
           (commit z-to*)
