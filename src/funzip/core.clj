@@ -255,7 +255,18 @@
 ;; Traversal
 
 (defn try-advance-preorder-depth-first [z]
-  (first-success z try-move-down-left, try-move-right, #(move-result/flatmap (try-move-up %) try-move-right)))
+  (first-success z
+                 try-move-down-left,
+                 try-move-right,
+                 (fn [z]
+                   (loop [z* z]
+                     (if (or (nil? z*) (zipper/top? z*))
+                       (fail z)
+                       ;else
+                       (let [m-right (try-move-right z*)]
+                         (if (move-result/success? m-right)
+                           m-right
+                           (recur (move-up z*)))))))))
 
 (defn advance-preorder-depth-first [z]
   (move-result/get (try-advance-preorder-depth-first z)))

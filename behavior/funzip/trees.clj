@@ -2,8 +2,20 @@
 
 
 (def tree-simple-map {:node 1 :children [{:node 2,
-                                          :children [{:node 4}, {:node 5}],}
+                                          :children [{:node 4}, {:node 5}]}
                                          {:node 3}]})
+
+(def tree-less-simple-map {:node 1 :children [{:node 2,
+                                               :children [{:node 4}, {:node 5}]}
+                                              {:node 3
+                                               :children [{:node 6
+                                                           :children [{:node 8}, {:node 9}]}]}
+                                              {:node -1}]})
+
+(def tree-less-simple-vec [1 [[2 [[4] [5]]]
+                              [3 [[6 [[8] [9]]]]]
+                              [-1]]])
+
 
 (def tree-simple-vec [1, [[2, [[4], [5]]]
                           [3]]])

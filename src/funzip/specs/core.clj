@@ -36,6 +36,9 @@
            :args (spec/cat :z zipper?, :f fn?)
            :ret zipper?)
 
+(spec/fdef funzip.core/first-success
+           :args (spec/cat :z zipper?, :moves (spec/* fn?))
+           :ret move-result?)
 
 (spec/fdef funzip.core/set
            :args (spec/cat :z zipper?, :v any?)
@@ -124,14 +127,6 @@
            :ret (spec/nilable zipper?))
 
 (spec/fdef funzip.core/delete-and-move-up
-           :args (spec/cat :z zipper?)
-           :ret (spec/nilable zipper?))
-
-(spec/fdef funzip.core/try-advance-left-depth-first
-           :args (spec/cat :z zipper?)
-           :ret move-result?)
-
-(spec/fdef funzip.core/advance-left-depth-first
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
