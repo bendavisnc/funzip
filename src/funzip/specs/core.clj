@@ -126,6 +126,10 @@
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
+(spec/fdef funzip.core/move-to-top
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
+
 (spec/fdef funzip.core/delete-and-move-up
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))

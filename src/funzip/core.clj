@@ -235,6 +235,8 @@
 (defn move-up [z]
   (move-result/get (try-move-up z)))
 
+(defn move-to-top [z]
+  (cycle z try-move-up))
 
 (defn try-delete-and-move-up [z]
   (let [head (:top z)]
@@ -272,7 +274,7 @@
   (move-result/get (try-advance-preorder-depth-first z)))
 
 (defn commit [z]
-  (:focus (cycle z try-move-up)))
+  (:focus (move-to-top z)))
 
 (defn preorder-seq [z]
   (letfn [(->seq* [m]
@@ -286,9 +288,7 @@
 
 
 (defn into [z, to]
-  (let [z-to (-> to
-                 (zipper/node->zipper)
-                 (set (node to (node (:focus z)))))]
+  (let [z-to (zipper/create-zipper :focus (node to (node (:focus z))))]
     (loop [z* z, z-to* z-to]
       (let [next-z* (advance-preorder-depth-first z*)]
         (cond

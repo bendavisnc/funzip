@@ -11,7 +11,7 @@
 
 (def top ::top)
 
-(defn create-zipper [& {:keys [left, focus, right, top]}]
+(defn create-zipper [& {:keys [left, focus, right, top] :or {top funzip.zipper/top}}]
   (->Zipper left, focus, right, top))
 
 (defn node->zipper [n]
