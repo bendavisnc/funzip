@@ -97,19 +97,6 @@
       (recur (rest moves*)
              ((first moves*) z)))))
 
-(declare advance-preorder-depth-first)
-(declare move-to-top)
-
-(defn find [z, pred]
-  "Traverses the supplied z and stops when pred returns true on the current focus."
-  (loop [z* (move-to-top z)]
-    (cond
-      (nil? z*)
-      nil
-      (pred (:focus z*))
-      z*
-      :else
-      (recur (advance-preorder-depth-first z*)))))
 
 ;;
 ;;
@@ -382,6 +369,19 @@
   "Returns zipper of the move result of moving to the next node in the zipper structure in a left to right, depth first traversal, or nil upon failure."
   [z]
   (move-result/get (try-advance-preorder-depth-first z)))
+
+(defn find [z, pred]
+  "Traverses the supplied z and stops when pred returns true on the current focus."
+  (loop [z* (move-to-top z)]
+    (cond
+      (nil? z*)
+      nil
+      (pred (:focus z*))
+      z*
+      :else
+      (recur (advance-preorder-depth-first z*)))))
+
+;; Additional functions:
 
 (defn commit
   "Returns the raw data structure (in its current state) behind the zipper."

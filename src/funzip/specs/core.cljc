@@ -1,7 +1,8 @@
 (ns funzip.specs.core
   (:require [clojure.spec.alpha :as spec]
-            [funzip.zipper :refer [zipper?, convertable?]]
-            [funzip.move-result :refer [move-result?]]))
+            [funzip.zipper :refer [zipper?, convertable?, zipperable?]]
+            [funzip.move-result :refer [move-result?]]
+            [clojure.spec.alpha :as spec]))
 
 (spec/fdef funzip.core/stay
            :args (spec/cat :z zipper?)
@@ -31,6 +32,10 @@
            :args (spec/cat :z zipper?, :f fn?)
            :ret zipper?)
 
+(spec/fdef funzip.core/set
+           :args (spec/cat :z zipper?, :v any?)
+           :ret zipper?)
+
 (spec/fdef funzip.core/update
            :args (spec/cat :z zipper?, :f fn?)
            :ret zipper?)
@@ -38,14 +43,6 @@
 (spec/fdef funzip.core/first-success
            :args (spec/cat :z zipper?, :moves (spec/* fn?))
            :ret move-result?)
-
-(spec/fdef funzip.core/find
-           :args (spec/cat :z zipper?, :pred fn?)
-           :ret (spec/nilable zipper?))
-
-(spec/fdef funzip.core/set
-           :args (spec/cat :z zipper?, :v any?)
-           :ret zipper?)
 
 (spec/fdef funzip.core/try-move-left
            :args (spec/cat :z zipper?)
@@ -104,8 +101,14 @@
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
-(spec/fdef funzip.core/move-down
-           :args (spec/cat :z zipper?)
+(spec/fdef funzip.core/try-insert-down-left
+           :args (spec/cat :z zipper?
+                           :values (spec/+ (spec/nilable zipperable?)))
+           :ret move-result?)
+
+(spec/fdef funzip.core/insert-down-left
+           :args (spec/cat :z zipper?
+                           :values (spec/+ (spec/nilable zipperable?)))
            :ret (spec/nilable zipper?))
 
 (spec/fdef funzip.core/try-move-down-right
@@ -116,12 +119,26 @@
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
+(spec/fdef funzip.core/move-down
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
+
 (spec/fdef funzip.core/try-move-down-at
            :args (spec/cat :z zipper?, :i integer?)
            :ret move-result?)
 
 (spec/fdef funzip.core/move-down-at
            :args (spec/cat :z zipper?, :i integer?)
+           :ret (spec/nilable zipper?))
+
+(spec/fdef funzip.core/try-insert-down-right
+           :args (spec/cat :z zipper?
+                           :values (spec/+ (spec/nilable zipperable?)))
+           :ret move-result?)
+
+(spec/fdef funzip.core/insert-down-right
+           :args (spec/cat :z zipper?
+                           :values (spec/+ (spec/nilable zipperable?)))
            :ret (spec/nilable zipper?))
 
 (spec/fdef funzip.core/try-move-up
@@ -136,6 +153,10 @@
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
+(spec/fdef funzip.core/try-delete-and-move-up
+           :args (spec/cat :z zipper?)
+           :ret move-result?)
+
 (spec/fdef funzip.core/delete-and-move-up
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
@@ -147,6 +168,11 @@
 (spec/fdef funzip.core/advance-preorder-depth-first
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
+
+(spec/fdef funzip.core/find
+           :args (spec/cat :z zipper?, :pred fn?)
+           :ret (spec/nilable zipper?))
+
 
 (spec/fdef funzip.core/commit
            :args (spec/cat :z zipper?)
