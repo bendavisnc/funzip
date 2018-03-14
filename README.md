@@ -9,6 +9,11 @@
 >  Anything you want to, do it; want to change the world... there's nothing to it."
 > - Willy Wonka, from "Willy Wonka and the Chocolate Factory" (1971)
 
+## Installation
+In Leiningen:
+
+[![version](https://clojars.org/funzip/latest-version.svg)](https://clojars.org/funzip)
+
 
 ## What?
 A zipper is a sort of deconstruction of a tree-like data structure that makes navigation and modification of said data structure easy and straight forward.

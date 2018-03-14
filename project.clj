@@ -11,6 +11,7 @@
   :aliases {"test-continuously" ["auto" "spec" "-f" "d"]}
   :pom-addition [:developers [:developer
                               [:name "Ben Davis"]
-                              [:email "bendavisnc@gmail.com"]]])
+                              [:email "bendavisnc@gmail.com"]]]
+  :deploy-repositories [["clojars" {:sign-releases false}]])
 
 
