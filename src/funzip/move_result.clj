@@ -1,4 +1,7 @@
 (ns funzip.move-result
+  "Introduces the notion of a `move result`.
+   This prevents ambiguity of a movement being nil because it's impossible,
+   and a node having the value of nil."
   (:refer-clojure :exclude [map, get])
   (:require [funzip.zipper :refer [zipper?]]))
 

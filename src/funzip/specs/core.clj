@@ -1,8 +1,7 @@
 (ns funzip.specs.core
   (:require [clojure.spec.alpha :as spec]
-            [funzip.zipper :refer [zipper?]]
-            [funzip.move-result :refer [move-result?]]
-            [funzip.protocols :refer [CanBeZipper, CanConvertZipper]]))
+            [funzip.zipper :refer [zipper?, convertable?]]
+            [funzip.move-result :refer [move-result?]]))
 
 (spec/fdef funzip.core/stay
            :args (spec/cat :z zipper?)
@@ -155,5 +154,5 @@
            :ret coll?)
 
 (spec/fdef funzip.core/into
-           :args (spec/cat :z zipper? :to #(and (satisfies? CanBeZipper %), (satisfies? CanConvertZipper %)))
+           :args (spec/cat :z zipper? :to convertable?)
            :ret coll?)
