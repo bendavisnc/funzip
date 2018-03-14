@@ -1,0 +1,6 @@
+
+add benchmarks (against clojure.zip for example)
+
+write a better behavior spec that's also a tutorial.
+
+add specs for functions that are parameters

@@ -3,8 +3,8 @@
   :url "https://github.com/bendavisnc/funzip"
   :license {:name "MIT"
             :url "http://opensource.org/licenses/MIT"}
-  :dependencies [[org.clojure/clojure "1.9.0"], [orchestra "2017.11.12-1"]]
-  :profiles {:dev {:dependencies [[speclj "3.3.0"]]
+  :dependencies [[org.clojure/clojure "1.9.0"]]
+  :profiles {:dev {:dependencies [[speclj "3.3.0"], [orchestra "2017.11.12-1"]]
                    :repl-options {:init-ns funzip.core-behavior}
                    :test-paths ["behavior"]}}
   :plugins [[speclj "3.3.0"], [lein-auto "0.1.3"]]
