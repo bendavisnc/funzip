@@ -1,6 +1,6 @@
 (defproject funzip "0.0.7"
   :description "A protocol based implementation of Huet's Zipper."
-  :url "http://example.com/FIXME"
+  :url "https://github.com/bendavisnc/funzip"
   :license {:name "MIT"
             :url "http://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.9.0"], [orchestra "2017.11.12-1"]]
