@@ -1,3 +1,4 @@
+
 # funzip - a protocol based implementation of Huet's Zipper
 
 <img src="https://upload.wikimedia.org/wikipedia/en/8/85/Gene_Wilder_as_Willy_Wonka.jpeg"
@@ -32,8 +33,10 @@ This is a port from a Scala implementation that can be found here: [https://gith
       (funzip/commit)))
 ```
 > ; typical-house-cat
+>
 >  [:cat [[:head [[:cute-eyes] [:cute-nose] [:adorable-smile]]]
->  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:body [[:soft-fur] [:playful-paws] [:bouncy-legs]]]]]
+>
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [:body [[:soft-fur] [:playful-paws] [:bouncy-legs]]]]]
 
 
 ```clojure
@@ -52,11 +55,14 @@ This is a port from a Scala implementation that can be found here: [https://gith
       (funzip/commit)))
 ```
 > ; atypical-house-cat
+>
 >   [:cat [[:head [[:laser-beam-eyes] [:cute-nose] [:smirk-of-hitler]]]
->  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;          [:body [[:hyper-allergic-fur] [:ninja-assassin-paws] [:bionic-legs]]]]]
+>
+>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:body [[:hyper-allergic-fur] [:ninja-assassin-paws] [:bionic-legs]]]]]
 
 ## Why?
 In one honest, hearty nutshell: I stumbled upon the Scala implementation and thought that a Clojure port would be straight forward and perhaps  worthwhile endeavor.
+
 clojure.zip is great, but it's a bit more difficult to use than it should be, considering that it came out before protocols was a thing.
 
 
