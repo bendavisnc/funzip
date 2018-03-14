@@ -8,7 +8,7 @@
    This implementation is a port of a Scala library that can be found here: `https://github.com/stanch/zipper`
 
    See funzip.zipper for facilities for creating a zipper and funzip.protocols for the actual protocols that enable creation (and conversion)."
-  (:refer-clojure :exclude [cycle, update, set, repeat, into])
+  (:refer-clojure :exclude [cycle, update, set, repeat, into, find])
   (:require [funzip.move-result :as move-result :refer [move-result?]]
             [funzip.zipper :as zipper :refer [zipper?]]
             [funzip.protocols :refer [unzip, zip, node]]))
@@ -96,6 +96,20 @@
       :else
       (recur (rest moves*)
              ((first moves*) z)))))
+
+(declare advance-preorder-depth-first)
+(declare move-to-top)
+
+(defn find [z, pred]
+  "Traverses the supplied z and stops when pred returns true on the current focus."
+  (loop [z* (move-to-top z)]
+    (cond
+      (nil? z*)
+      nil
+      (pred (:focus z*))
+      z*
+      :else
+      (recur (advance-preorder-depth-first z*)))))
 
 ;;
 ;;
@@ -385,6 +399,7 @@
                                 (->seq* (try-advance-preorder-depth-first z*)))))))]
     (->seq* (stay z))))
 
+;; Conversion
 
 (defn into [z, to]
   "Returns a raw data structure populated with the contents of the supplied zipper.

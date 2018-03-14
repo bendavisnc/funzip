@@ -39,6 +39,10 @@
            :args (spec/cat :z zipper?, :moves (spec/* fn?))
            :ret move-result?)
 
+(spec/fdef funzip.core/find
+           :args (spec/cat :z zipper?, :pred fn?)
+           :ret (spec/nilable zipper?))
+
 (spec/fdef funzip.core/set
            :args (spec/cat :z zipper?, :v any?)
            :ret zipper?)

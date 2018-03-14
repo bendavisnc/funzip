@@ -44,6 +44,7 @@
                                    (funzip/move-up)                                                  (funzip/tap-focus #(should= 11 (get-node %)))
                                    (funzip/rewind-right)                                             (funzip/tap-focus #(should= 13 (get-node %)))
                                    (funzip/insert-down-left (create-node 131), (create-node 132))    (funzip/tap-focus #(should= 131 (get-node %)))
+                                   (funzip/find #(= -2 (get-node %)))                                (funzip/tap-focus #(should= -2 (get-node %)))
                                    (funzip/commit))]
                   (should= raw-tree-after
                            modified))))
