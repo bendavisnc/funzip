@@ -1,7 +1,8 @@
 (ns funzip.specs.core
   (:require [clojure.spec.alpha :as spec]
             [funzip.zipper :refer [zipper?]]
-            [funzip.move-result :refer [move-result?]]))
+            [funzip.move-result :refer [move-result?]]
+            [funzip.protocols :refer [CanBeZipper, CanConvertZipper]]))
 
 (spec/fdef funzip.core/stay
            :args (spec/cat :z zipper?)
@@ -10,7 +11,6 @@
 (spec/fdef funzip.core/move-to
            :args (spec/cat :origin zipper? :z zipper?)
            :ret move-result?)
-
 
 (spec/fdef funzip.core/fail
            :args (spec/cat :origin zipper?)
@@ -54,7 +54,7 @@
 
 (spec/fdef funzip.core/rewind-left
            :args (spec/cat :z zipper?)
-           :ret (spec/nilable zipper?))
+           :ret zipper?)
 
 (spec/fdef funzip.core/try-move-left-by
            :args (spec/cat :z zipper?, :n integer?)
@@ -83,7 +83,7 @@
 
 (spec/fdef funzip.core/rewind-right
            :args (spec/cat :z zipper?)
-           :ret (spec/nilable zipper?))
+           :ret zipper?)
 
 (spec/fdef funzip.core/try-move-right-by
            :args (spec/cat :z zipper?, :n integer?)
@@ -98,6 +98,10 @@
            :ret move-result?)
 
 (spec/fdef funzip.core/move-down-left
+           :args (spec/cat :z zipper?)
+           :ret (spec/nilable zipper?))
+
+(spec/fdef funzip.core/move-down
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
@@ -116,7 +120,6 @@
 (spec/fdef funzip.core/move-down-at
            :args (spec/cat :z zipper?, :i integer?)
            :ret (spec/nilable zipper?))
-
 
 (spec/fdef funzip.core/try-move-up
            :args (spec/cat :z zipper?)
@@ -142,3 +145,15 @@
            :args (spec/cat :z zipper?)
            :ret (spec/nilable zipper?))
 
+(spec/fdef funzip.core/commit
+           :args (spec/cat :z zipper?)
+           :ret coll?)
+
+(spec/fdef funzip.core/preorder-seq
+           ;:args (spec/cat :z zipper? :to (fn [e] (and (satisfies? CanBeZipper e), (satisfies? CanConvertZipper e))))
+           :args (spec/cat :z zipper?)
+           :ret coll?)
+
+(spec/fdef funzip.core/into
+           :args (spec/cat :z zipper? :to #(and (satisfies? CanBeZipper %), (satisfies? CanConvertZipper %)))
+           :ret coll?)
