@@ -16,7 +16,6 @@
 
 (spec-test/instrument)
 
-
 (describe "funzip spec"
           (it "Should perform basic operations correctly"
               (doseq [[raw-tree, raw-tree-after, get-node, create-node, update-node] [[tree-vec, tree-vec-modded, first, #(assoc [] 0 %), #(assoc %1 0 %2)]
