@@ -6,9 +6,7 @@
   (zip [this, children]))
 
 (defprotocol CanConvertZipper
-  (node [this], [this, v])
-  (children [this]))
-
+  (node [this], [this, v]))
 
 (extend-type IPersistentVector
   CanBeZipper
@@ -22,6 +20,5 @@
     ([this]
      (first this))
     ([this, v]
-     (assoc this 0 v)))
-  (children [this]
-    (second this)))
+     (assoc this 0 v))))
+

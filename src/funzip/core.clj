@@ -11,7 +11,7 @@
   (:refer-clojure :exclude [cycle, update, set, repeat, into])
   (:require [funzip.move-result :as move-result :refer [move-result?]]
             [funzip.zipper :as zipper :refer [zipper?]]
-            [funzip.protocols :refer [unzip, zip, node, children]]))
+            [funzip.protocols :refer [unzip, zip, node]]))
 
 
 (defn stay
@@ -395,14 +395,14 @@
         (cond
           (nil? next-z*)
           (commit z-to*)
-          (empty? (children (:focus z*)))
+          (empty? (unzip (:focus z*)))
           (recur next-z*
                  (advance-preorder-depth-first z-to*))
           :else
           (recur next-z*
                  (advance-preorder-depth-first (move-up (apply insert-down-left
                                                                z-to*
-                                                               (map (partial node to) (map node (children (:focus z*)))))))))))))
+                                                               (map (partial node to) (map node (unzip (:focus z*)))))))))))))
 
 
 

@@ -14,9 +14,7 @@
     ([this]
      (:node this))
     ([this, v]
-     (assoc this :node v)))
-  (children [this]
-    (:children this)))
+     (assoc this :node v))))
 
 (extend-type PersistentStructMap
   CanBeZipper

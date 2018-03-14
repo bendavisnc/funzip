@@ -9,7 +9,7 @@
             [funzip.specs.zipper]
             [funzip.traversal-utils :as traversal-utils]
             [funzip.trees :refer :all]
-            [funzip.protocols :refer [node, children]]
+            [funzip.protocols :refer [node]]
             [funzip.tree-protocol-example-exts]
             [funzip.test-utils :refer [get-xml-node, create-xml-node, update-xml-node]]
             [funzip.zipper :as zipper]))
