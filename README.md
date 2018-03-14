@@ -61,7 +61,7 @@ This is a port from a Scala implementation that can be found here: [https://gith
 >   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:body [[:hyper-allergic-fur] [:ninja-assassin-paws] [:bionic-legs]]]]]
 
 ## Why?
-In one honest, hearty nutshell: I stumbled upon the Scala implementation and thought that a Clojure port would be straight forward and perhaps  worthwhile endeavor.
+In one honest, hearty nutshell: I stumbled upon the Scala implementation and thought that a Clojure port would be a straight forward and perhaps  worthwhile endeavor.
 
 clojure.zip is great, but it's a bit more difficult to use than it should be, considering that it came out before protocols was a thing.
 
