@@ -1,4 +1,4 @@
-(defproject funzip "0.0.7"
+(defproject funzip "0.0.8"
   :description "A protocol based implementation of Huet's Zipper."
   :url "https://github.com/bendavisnc/funzip"
   :license {:name "MIT"
