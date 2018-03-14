@@ -18,7 +18,7 @@ In Leiningen:
 ## What?
 A zipper is a sort of deconstruction of a tree-like data structure that makes navigation and modification of said data structure easy and straight forward.
 
-To learn more about the idea, check out the [wikipedia page](https://github.com/stanch/zipper), or read the [original paper](https://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-zipper.pdf).
+To learn more about the idea, check out the [wikipedia page](https://en.wikipedia.org/wiki/Zipper), or read the [original paper](https://www.st.cs.uni-saarland.de/edu/seminare/2005/advanced-fp/docs/huet-zipper.pdf).
 
 This is a port from a Scala implementation that can be found here: [https://github.com/stanch/zipper]
 
