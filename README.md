@@ -22,11 +22,11 @@ To learn more about the idea, check out the [wikipedia page](https://en.wikipedi
 
 This is a port from a Scala implementation that can be found here: [https://github.com/stanch/zipper]
 
- example usage:
+example usage:
 
 ```clojure
-(require (require '[funzip.core :as funzip])   ; The core api that includes all functions for navigation and modification
-                  '[funzip.zipper :as zipper]) ; ns for raw data -> zipper
+(require '[funzip.core :as funzip]    ; The core api that includes all functions for navigation and modification
+         '[funzip.zipper :as zipper]) ; ns for raw data -> zipper
 (def typical-house-cat
   (-> :cat
       (zipper/create-zipper)
@@ -37,12 +37,13 @@ This is a port from a Scala implementation that can be found here: [https://gith
       (funzip/insert-down-left [:soft-fur] [:playful-paws] [:bouncy-legs])
       (funzip/commit)))
 ```
-> ; typical-house-cat
->
->  [:cat [[:head [[:cute-eyes] [:cute-nose] [:adorable-smile]]]
->
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [:body [[:soft-fur] [:playful-paws] [:bouncy-legs]]]]]
 
+```clojure
+; typical-house-cat
+
+[:cat [[:head [[:cute-eyes] [:cute-nose] [:adorable-smile]]]
+       [:body [[:soft-fur] [:playful-paws] [:bouncy-legs]]]]]
+```
 
 ```clojure
 (def atypical-house-cat
@@ -59,11 +60,13 @@ This is a port from a Scala implementation that can be found here: [https://gith
       (funzip/insert-down-right [:hyper-allergic-fur] [:ninja-assassin-paws] [:bionic-legs])
       (funzip/commit)))
 ```
-> ; atypical-house-cat
->
->   [:cat [[:head [[:laser-beam-eyes] [:cute-nose] [:smirk-of-hitler]]]
->
->   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:body [[:hyper-allergic-fur] [:ninja-assassin-paws] [:bionic-legs]]]]]
+
+```clojure
+; atypical-house-cat
+
+[:cat [[:head [[:laser-beam-eyes] [:cute-nose] [:smirk-of-hitler]]]
+       [:body [[:hyper-allergic-fur] [:ninja-assassin-paws] [:bionic-legs]]]]]
+```
 
 ## Why?
 In one honest, hearty nutshell: I stumbled upon the Scala implementation and thought that a Clojure port would be a straight forward and perhaps  worthwhile endeavor.
