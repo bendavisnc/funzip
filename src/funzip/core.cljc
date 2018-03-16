@@ -79,14 +79,16 @@
   (zipper/copy-zipper z
                       :focus v))
 
-(defn update [z, f]
+(defn update
   "Returns a zipper with a new focus that is the result of calling f on the old focus.
    `f` should be a function that takes one parameter that satisfies the CanBeZipper protocol and return a value of the same type."
+  [z, f]
   (clojure.core/update z :focus f))
 
-(defn first-success [z & moves]
+(defn first-success
   "Returns the first successful move on z.
    Each supplied move should be a function that takes a zipper and returns a move result."
+  [z & moves]
   (loop [moves* moves, acc nil]
     (cond
       (and acc (move-result/success? acc))
@@ -323,8 +325,8 @@
   (move-result/get (try-move-up z)))
 
 (defn move-to-top
-  [z]
   "Returns a zipper focused at the top most (root) of the zipper structure."
+  [z]
   (cycle z try-move-up))
 
 (defn try-delete-and-move-up
@@ -370,8 +372,9 @@
   [z]
   (move-result/get (try-advance-preorder-depth-first z)))
 
-(defn find [z, pred]
+(defn find
   "Traverses the supplied z and stops when pred returns true on the current focus."
+  [z, pred]
   (loop [z* (move-to-top z)]
     (cond
       (nil? z*)
@@ -388,8 +391,9 @@
   [z]
   (:focus (move-to-top z)))
 
-(defn preorder-seq [z]
+(defn preorder-seq
   "Returns a lazy seq of all of the nodes of the zipper, in a left to right, depth first order."
+  [z]
   (letfn [(->seq* [m]
             (if (move-result/fail? m)
               nil
@@ -401,9 +405,10 @@
 
 ;; Conversion
 
-(defn into [z, to]
+(defn into
   "Returns a raw data structure populated with the contents of the supplied zipper.
    `to` should be a data type that satisfies both protocols, CanBeZipper and CanConvertZipper."
+  [z, to]
   (let [z-to (zipper/create-zipper :focus (node to (node (:focus z))))]
     (loop [z* z, z-to* z-to]
       (let [next-z* (advance-preorder-depth-first z*)]
