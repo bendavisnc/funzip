@@ -1,0 +1,21 @@
+name: Run tests
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Clojure
+        uses: DeLaGuardo/setup-clojure@13
+        with:
+          lein: latest
+
+      - name: Run tests
+        run: |
+          lein spec -f d
