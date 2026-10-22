@@ -42,7 +42,8 @@
     (= 1 (count args))
     (create-zipper :focus [(first args)]) ; default collection type = vector
     :else
-      (throw (new IllegalArgumentException (str "Don't know how to create zipper with " args)))))
+      (throw #?(:clj (IllegalArgumentException. (str "Don't know how to create zipper with " args))
+                :cljs (js/Error. (str "Don't know how to create zipper with " args))))))
 
 (defn node->zipper
   "Returns a zipper given a root node, ie a raw tree like data structure."
