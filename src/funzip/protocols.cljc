@@ -3,8 +3,7 @@
 
    `CanBeZipper` is the main protocol that lets a data structure be a zipper.
    `CanConvertZipper` is currently only necessary for funzip.core/into to work.
-  "
-  (:import (clojure.lang IPersistentVector)))
+  ")
 
 (defprotocol CanBeZipper
   "Defines all of the methods needed to support zipper functionality."
@@ -17,7 +16,8 @@
   "Defines a node getter and setter method for funzip.core/into to work."
   (node [this], [this, v]))
 
-(extend-type IPersistentVector
+(extend-type #?(:clj clojure.lang.IPersistentVector
+                :cljs cljs.core.PersistentVector)
   CanBeZipper
   (unzip [this]
     (second this))
