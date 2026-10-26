@@ -1,0 +1,27 @@
+name: lintcheck
+
+on:
+  push:
+  pull_request:
+
+
+jobs:
+  lintcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Install Clojure
+        uses: DeLaGuardo/setup-clojure@13
+        with:
+          zprint: latest
+
+      - name: Lint check
+        run: zprint '{:cwd-zprintrc? true :files {:glob "**{.edn,.clj,.cljc}"}}' --list-formatted-summary-check
+
