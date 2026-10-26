@@ -5,15 +5,12 @@
    `CanConvertZipper` is currently only necessary for funzip.core/into to work.
   ")
 
+;!zprint {:format :skip}
 (defprotocol CanBeZipper
   "Defines all of the methods needed to support zipper functionality."
-  (unzip
-   
-   [this]
+  (unzip [this]
    "Gets the children of this node.")
-  (zip
-   
-   [this children]
+  (zip [this children]
    "Sets the children of this node."))
 
 (defprotocol CanConvertZipper
