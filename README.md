@@ -1,5 +1,5 @@
 
-# funzip - a protocol based implementation of Huet's Zipper [![Build Status](https://github.com/bendavisnc/funzip/actions/workflows/test.yml/badge.svg)](https://github.com/bendavisnc/funzip/actions/workflows/test.yml)
+# funzip - a protocol based implementation of Huet's Zipper [![Build Status](https://github.com/bendavisnc/funzip/actions/workflows/test.yml/badge.svg)](https://github.com/bendavisnc/funzip/actions/workflows/test.yml) [![Build Status](https://github.com/bendavisnc/funzip/actions/workflows/testcljs.yml/badge.svg)](https://github.com/bendavisnc/funzip/actions/workflows/testcljs.yml)
 
 <img src="https://upload.wikimedia.org/wikipedia/en/8/85/Gene_Wilder_as_Willy_Wonka.jpeg"
  alt="Picture of Willy Wonka, from Willy Wonka & the Chocolate Factory (1971)" title="Willy Wonka, from Willy Wonka & the Chocolate Factory (1971)"
