@@ -1,11 +1,11 @@
-{:lein true
+{:lein true,
 
  :builds
  {:node-test
-  {:target    :node-test
-   :output-to "target/shadow-node-test/node-tests.js"
-   :ns-regexp "-behavior"
-   :compiler-options {:warnings {:redef-in-file false
-                                 :fn-deprecated false}}
-   :main funzip.test-runner/main}}}
+  {:target           :node-test,
+   :output-to        "target/shadow-node-test/node-tests.js",
+   :ns-regexp        "-behavior",
+   :compiler-options {:warnings {:redef-in-file false,
+                                 :fn-deprecated false}},
+   :main             funzip.test-runner/main}}}
 

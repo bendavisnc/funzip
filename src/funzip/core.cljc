@@ -8,21 +8,21 @@
    This implementation is a port of a Scala library that can be found here: `https://github.com/stanch/zipper`
 
    See funzip.zipper for facilities for creating a zipper and funzip.protocols for the actual protocols that enable creation (and conversion)."
-  (:refer-clojure :exclude [cycle, update, set, repeat, into, find])
+  (:refer-clojure :exclude [cycle update set repeat into find])
   (:require [funzip.move-result :as move-result :refer [move-result?]]
             [funzip.zipper :as zipper :refer [zipper?]]
-            [funzip.protocols :refer [unzip, zip, node]]))
+            [funzip.protocols :refer [unzip zip node]]))
 
 
 (defn stay
   "Returns a successful move result with the supplied zipper as also the origin."
   [z]
-  (move-result/successful-move :origin z, :zipper z))
+  (move-result/successful-move :origin z :zipper z))
 
 (defn move-to
   "Returns a successful move result with the supplied origin and zipper."
-  [origin, z]
-  (move-result/successful-move :origin origin, :zipper z))
+  [origin z]
+  (move-result/successful-move :origin origin :zipper z))
 
 (defn fail
   "Returns a failed move with the supplied origin."
@@ -35,7 +35,7 @@
 (defn cycle
   "Returns the zipper of the last successful move-result before failure, by repeatedly calling the supplied move-fn on its own result.
    The supplied move-fn should take a zipper and return a move result."
-  [z, move-fn]
+  [z move-fn]
   (loop [acc z]
     (let [result (move-fn acc)]
       (if (move-result/fail? result)
@@ -46,28 +46,29 @@
 (defn try-repeat
   "Returns the last successful move result by repeatedly calling the supplied move-fn on its own result n times.
    The supplied move-fn should take a zipper and return a move result."
-  [z, n, move-fn]
+  [z n move-fn]
   (move-result/with-origin
-    (loop [n* n, acc z]
-      (if (< n* 1)
-        (stay acc)
-        ;else
-        (let [result (move-fn acc)]
-          (if (move-result/fail? result)
-            result
-            ;else
-            (recur (dec n*) (move-result/get result))))))
-    z))
+   (loop [n*  n
+          acc z]
+     (if (< n* 1)
+       (stay acc)
+       ;else
+       (let [result (move-fn acc)]
+         (if (move-result/fail? result)
+           result
+           ;else
+           (recur (dec n*) (move-result/get result))))))
+   z))
 
 (defn repeat
   "Returns the zipper of the last successful move result (or nil) by repeatedly calling the supplied move-fn on its own result n times.
    The supplied move-fn should take a zipper and return a move result."
-  [z, n, move-fn]
+  [z n move-fn]
   (move-result/get (try-repeat z n move-fn)))
 
 (defn tap-focus
   "Calls f on the focus of the supplied zipper, and returns the supplied zipper."
-  [z, f]
+  [z f]
   (do
     (f (:focus z))
     z))
@@ -75,21 +76,23 @@
 (defn set
   "Returns a zipper with a new focus that is the value of the supplied v.
    `v` should be a data type that satisfies the CanBeZipper protocol."
-  [z, v]
+  [z v]
   (zipper/copy-zipper z
-                      :focus v))
+                      :focus
+                      v))
 
 (defn update
   "Returns a zipper with a new focus that is the result of calling f on the old focus.
    `f` should be a function that takes one parameter that satisfies the CanBeZipper protocol and return a value of the same type."
-  [z, f]
+  [z f]
   (clojure.core/update z :focus f))
 
 (defn first-success
   "Returns the first successful move on z.
    Each supplied move should be a function that takes a zipper and returns a move result."
   [z & moves]
-  (loop [moves* moves, acc nil]
+  (loop [moves* moves
+         acc    nil]
     (cond
       (and acc (move-result/success? acc))
       acc
@@ -118,7 +121,7 @@
       ;else
       (move-to z
                (zipper/copy-zipper z
-                                   :left tail
+                                   :left  tail
                                    :focus head
                                    :right (cons (:focus z) (:right z)))))))
 
@@ -137,13 +140,13 @@
 
 (defn try-move-left-by
   "Returns the move result of moving left n times."
-  [z, n]
-  (try-repeat z, n, try-move-left))
+  [z n]
+  (try-repeat z n try-move-left))
 
 
 (defn move-left-by
   "Returns the zipper of the move result of moving left n times, or nil upon failure."
-  [z, n]
+  [z n]
   (move-result/get (try-move-left-by z n)))
 
 
@@ -156,7 +159,7 @@
       ;else
       (move-to z
                (zipper/copy-zipper z
-                                   :left tail
+                                   :left  tail
                                    :focus head)))))
 
 
@@ -179,7 +182,7 @@
                (zipper/copy-zipper z
                                    :right tail
                                    :focus head
-                                   :left (cons (:focus z) (:left z)))))))
+                                   :left  (cons (:focus z) (:left z)))))))
 
 
 (defn move-right
@@ -196,13 +199,13 @@
 
 (defn try-move-right-by
   "Returns the move result of moving right n times."
-  [z, n]
-  (try-repeat z, n, try-move-right))
+  [z n]
+  (try-repeat z n try-move-right))
 
 
 (defn move-right-by
   "Returns the zipper of the move result of moving right n times, or nil upon failure."
-  [z, n]
+  [z n]
   (move-result/get (try-move-right-by z n)))
 
 
@@ -217,10 +220,10 @@
       ;else
       (move-to z
                (zipper/copy-zipper z
-                                   :left nil
+                                   :left  nil
                                    :focus head
                                    :right tail
-                                   :top z)))))
+                                   :top   z)))))
 
 
 (defn move-down-left
@@ -230,21 +233,21 @@
 
 (defn try-insert-down-left
   "Returns the move result of moving down left with the supplied values prepended."
-  [z, & values]
+  [z & values]
   (let [[head & tail] (concat values (unzip (:focus z)))]
     (if (nil? head)
       (fail z)
       ;else
       (move-to z
                (zipper/copy-zipper z
-                                   :left nil
+                                   :left  nil
                                    :focus head
                                    :right tail
-                                   :top z)))))
+                                   :top   z)))))
 
 (defn insert-down-left
   "Returns the zipper of the move result of moving down left with the supplied values prepended, or nil upon failure."
-  [z, & values]
+  [z & values]
   (move-result/get (apply try-insert-down-left (cons z values))))
 
 
@@ -272,33 +275,33 @@
 
 (defn try-move-down-at
   "Returns the move result of moving down and focusing on the i'th child."
-  [z, i]
+  [z i]
   (move-result/map (try-move-down-left z) #(move-right-by % i)))
 
 
 (defn move-down-at
   "Returns the zipper of the move result of moving down and focusing on the i'th child, or nil upon failure."
-  [z, i]
+  [z i]
   (move-result/get (try-move-down-at z i)))
 
 
 (defn try-insert-down-right
   "Returns the move result of moving down right with the supplied values appended."
-  [z, & values]
+  [z & values]
   (let [[head & tail] (concat (unzip (:focus z)) values)]
     (if (nil? head)
       (fail z)
       ;else
       (move-to z
                (rewind-right (zipper/copy-zipper z
-                                                 :left nil
+                                                 :left  nil
                                                  :focus head
                                                  :right tail
-                                                 :top z))))))
+                                                 :top   z))))))
 
 (defn insert-down-right
   "Returns the zipper of the move result of moving down right with the supplied values appended, or nil upon failure."
-  [z, & values]
+  [z & values]
   (move-result/get (apply try-insert-down-right z values)))
 
 ;; Up
@@ -311,12 +314,13 @@
       (fail z)
       (move-to z
                (zipper/copy-zipper head
-                                   :focus (let [children
-                                                 (-> (:focus z)
-                                                     (cons (:left z))
-                                                     (reverse)
-                                                     (concat (:right z)))]
-                                            (zip (:focus head) children)))))))
+                                   :focus
+                                   (let [children
+                                         (-> (:focus z)
+                                             (cons (:left z))
+                                             (reverse)
+                                             (concat (:right z)))]
+                                     (zip (:focus head) children)))))))
 
 
 (defn move-up
@@ -337,11 +341,12 @@
       (fail z)
       (move-to z
                (zipper/copy-zipper head
-                                   :focus (let [children
-                                                (-> (:left z)
-                                                    (reverse)
-                                                    (concat (:right z)))]
-                                            (zip (:focus head) children)))))))
+                                   :focus
+                                   (let [children
+                                         (-> (:left z)
+                                             (reverse)
+                                             (concat (:right z)))]
+                                     (zip (:focus head) children)))))))
 
 
 (defn delete-and-move-up
@@ -355,8 +360,8 @@
   "Returns the move result of moving to the next node in the zipper structure in a left to right, depth first traversal."
   [z]
   (first-success z
-                 try-move-down-left,
-                 try-move-right,
+                 try-move-down-left
+                 try-move-right
                  (fn [z]
                    (loop [z* z]
                      (if (or (nil? z*) (zipper/top? z*))
@@ -374,7 +379,7 @@
 
 (defn find
   "Traverses the supplied z and stops when pred returns true on the current focus."
-  [z, pred]
+  [z pred]
   (loop [z* (move-to-top z)]
     (cond
       (nil? z*)
@@ -400,7 +405,8 @@
               ;else
               (let [z* (move-result/get m)]
                 (lazy-seq (cons (:focus z*)
-                                (->seq* (try-advance-preorder-depth-first z*)))))))]
+                                (->seq* (try-advance-preorder-depth-first
+                                         z*)))))))]
     (->seq* (stay z))))
 
 ;; Conversion
@@ -408,9 +414,10 @@
 (defn into
   "Returns a raw data structure populated with the contents of the supplied zipper.
    `to` should be a data type that satisfies both protocols, CanBeZipper and CanConvertZipper."
-  [z, to]
+  [z to]
   (let [z-to (zipper/create-zipper :focus (node to (node (:focus z))))]
-    (loop [z* z, z-to* z-to]
+    (loop [z*    z
+           z-to* z-to]
       (let [next-z* (advance-preorder-depth-first z*)]
         (cond
           (nil? next-z*)
@@ -420,9 +427,11 @@
                  (advance-preorder-depth-first z-to*))
           :else
           (recur next-z*
-                 (advance-preorder-depth-first (move-up (apply insert-down-left
-                                                               z-to*
-                                                               (map (partial node to) (map node (unzip (:focus z*)))))))))))))
+                 (advance-preorder-depth-first
+                  (move-up (apply insert-down-left
+                                  z-to*
+                                  (map (partial node to)
+                                       (map node (unzip (:focus z*)))))))))))))
 
 
 

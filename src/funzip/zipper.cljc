@@ -1,14 +1,18 @@
 (ns funzip.zipper
   "Defines a Zipper record and facilities for creation."
-  (:require [funzip.protocols :refer [CanBeZipper, CanConvertZipper]]))
+  (:require [funzip.protocols :refer [CanBeZipper CanConvertZipper]]))
 
 
-(defrecord Zipper [left,  ; A list of all of the child nodes left of the current focus.
-                   focus, ; The current focus
-                   right, ; A list of all of the child nodes right of the current focus.
-                   top])  ; A reference zipper before moving down, or `::top` to indicate that we're at the very top.
+(defrecord Zipper [left  ; A list of all of the child nodes left of the
+                         ; current focus.
+                   focus ; The current focus
+                   right ; A list of all of the child nodes right of the
+                         ; current focus.
+                   top])  ; A reference zipper before moving down, or `::top` to indicate that
+  ; we're at the very top.
 
-(defn zipper? [z]
+(defn zipper?
+  [z]
   (instance? Zipper z))
 
 (defn zipperable?
@@ -37,25 +41,30 @@
   [& args]
   (cond
     (:focus (apply hash-set args))
-    (let [{:keys [left, focus, right, top] :or {top funzip.zipper/top}} args]
-      (->Zipper left, focus, right, top))
+    (let [{:keys [left focus right top], :or {top funzip.zipper/top}} args]
+      (->Zipper left focus right top))
     (= 1 (count args))
-    (create-zipper :focus [(first args)]) ; default collection type = vector
+    (create-zipper :focus [(first args)]) ; default collection type =
+                                          ; vector
     :else
-      (throw #?(:clj (IllegalArgumentException. (str "Don't know how to create zipper with " args))
-                :cljs (js/Error. (str "Don't know how to create zipper with " args))))))
+    (throw #?(:clj (IllegalArgumentException.
+                    (str "Don't know how to create zipper with " args))
+              :cljs (js/Error. (str "Don't know how to create zipper with "
+                                    args))))))
 
 (defn node->zipper
   "Returns a zipper given a root node, ie a raw tree like data structure."
   [n]
-  (create-zipper :left nil
+  (create-zipper :left  nil
                  :focus n
                  :right nil
-                 :top top))
+                 :top   top))
 
 (defn copy-zipper
   "Copies a supplied zipper, overriding any supplied fields corresponding to Zipper record fields."
-  [z & {:keys [left, focus, right, top] :or {left (:left z), focus (:focus z), right (:right z), top (:top z)}}]
+  [z &
+   {:keys [left focus right top],
+    :or   {left (:left z), focus (:focus z), right (:right z), top (:top z)}}]
   (-> z
       (assoc :left left)
       (assoc :focus focus)

@@ -1,11 +1,14 @@
 (ns funzip.core-behavior
   #?(:clj (:require [speclj.core :refer [describe it should= run-specs]])
-     :cljs (:require-macros [speclj.core :refer [describe it should= should-not run-specs, should]]))
+     :cljs (:require-macros [speclj.core :refer
+                             [describe it should= should-not run-specs
+                              should]]))
   (:require [speclj.core]
             [funzip.core :as funzip]
             [clojure.spec.gen.alpha]
             [funzip.zipper :as zipper]))
 
+;!zprint {:format :skip}
 (describe "funzip spec"
           (let [tree [1 [[11, [[111], [112]]]
                          [12, [[121],

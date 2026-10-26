@@ -7,27 +7,32 @@
 
 (defprotocol CanBeZipper
   "Defines all of the methods needed to support zipper functionality."
-  (unzip [this]
-    "Gets the children of this node.")
-  (zip [this, children]
-    "Sets the children of this node."))
+  (unzip
+   
+   [this]
+   "Gets the children of this node.")
+  (zip
+   
+   [this children]
+   "Sets the children of this node."))
 
 (defprotocol CanConvertZipper
   "Defines a node getter and setter method for funzip.core/into to work."
-  (node [this], [this, v]))
+  (node [this]
+        [this v]))
 
 (extend-type #?(:clj clojure.lang.IPersistentVector
                 :cljs cljs.core.PersistentVector)
-  CanBeZipper
-  (unzip [this]
-    (second this))
-  (zip [this, children]
-    (assoc this 1 (vec children)))
+ CanBeZipper
+   (unzip [this]
+     (second this))
+   (zip [this children]
+     (assoc this 1 (vec children)))
 
-  CanConvertZipper
-  (node
-    ([this]
-     (first this))
-    ([this, v]
-     (assoc this 0 v))))
+ CanConvertZipper
+   (node
+     ([this]
+      (first this))
+     ([this v]
+      (assoc this 0 v))))
 
