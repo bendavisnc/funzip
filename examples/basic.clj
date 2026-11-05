@@ -1,58 +1,37 @@
-
-(require '[funzip.core :as funzip])
-(require '[funzip.zipper :as funzip-zipper])
-(require '[funzip.protocols :as fp])
-(require '[clojure.string :as s])
-(require '[clojure.pprint :as pp])
-(require '[taipei-404.html :refer [html->hiccup]])
+(require '[funzip.core :as funzip] ; The core api that includes all
+                                   ; functions for navigation and
+                                   ; modification
+         '[funzip.zipper :as zipper] ; ns for raw data -> zipper
+         '[clojure.pprint :as pp])
 
 (def cat
-  (first (html->hiccup "<p>My cat is <strong>very</strong> grumpy.</p>")))
+  (-> :cat
+      zipper/create-zipper
 
-(assert (= [:p "My cat is " [:strong "very"] " grumpy."] cat))
+      ;; Give the cat a head and body.
+      (funzip/insert-down-left [:head] [:body])
 
-(extend-type clojure.lang.IPersistentVector
- fp/CanBeZipper
-   (unzip [this]
-     (assert (vector? this))
-     ;(rest this))
-     (subvec this 1))
-   (zip [this children]
-     (assert (vector? this))
-     (vec (concat [(first this)] children))))
+      ;; Add some facial features.
+      (funzip/insert-down-left
+       [:eyes]
+       [:nose]
+       [:mouth])
 
-;; Stop when we get to a string.
-(extend-type java.lang.String
- fp/CanBeZipper
-   (unzip [this]
-     nil))
+      ;; Move to the body.
+      funzip/move-up
+      funzip/move-right
 
-(defn is-grumpy-cat?
-  [cat]
-  (boolean (funzip/find (funzip-zipper/node->zipper cat)
-                        (comp #{"grumpy"}
-                              #(cond-> %
-                                 (string? %) (as-> $
-                                               (filter Character/isLetterOrDigit
-                                                       $)
-                                               (s/join $)))))))
+      ;; Give the cat some fur, paws, and legs.
+      (funzip/insert-down-left
+       [:fur]
+       [:paws]
+       [:legs])
 
-(assert (is-grumpy-cat? cat))
-
-(defn grumpy-cat->happy-cat
-  [cat]
-  (-> cat
-      funzip-zipper/node->zipper
-      (funzip/find (comp #{"grumpy"}
-                         #(cond-> %
-                            (string? %) (as-> $
-                                          (filter Character/isLetterOrDigit $)
-                                          (s/join $)))))
-      (funzip/update #(s/replace % "grumpy" "happy"))
       funzip/commit))
 
-(assert (= [:p "My cat is " [:strong "very"] " happy."]
-           (grumpy-cat->happy-cat cat)))
 
-(assert (not (is-grumpy-cat? (grumpy-cat->happy-cat cat))))
+(assert (= [:cat
+            [[:head [[:eyes] [:nose] [:mouth]]]
+             [:body [[:fur] [:paws] [:legs]]]]]
+           cat))
 
