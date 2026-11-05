@@ -1,8 +1,8 @@
-(require '[funzip.core :as funzip])
-(require '[funzip.zipper :as funzip-zipper])
-(require '[funzip.protocols :as fp])
-(require '[clojure.string :as s])
-(require '[clojure.pprint :as pp])
+(require '[funzip.core :as funzip]
+         '[funzip.zipper :as zipper]
+         '[funzip.protocols :as protocols]
+         '[clojure.string :as s]
+         '[clojure.pprint :as pp])
 
 (def cat
   {:children (list {:node :p}
@@ -11,7 +11,7 @@
                    {:node " grumpy."})})
 
 (extend-type clojure.lang.IPersistentMap
- fp/CanBeZipper
+ protocols/CanBeZipper
    (unzip [this]
      (:children this))
    (zip [this children]
@@ -19,7 +19,7 @@
 
 (defn is-grumpy-cat?
   [cat]
-  (boolean (funzip/find (funzip-zipper/node->zipper cat)
+  (boolean (funzip/find (zipper/node->zipper cat)
                         (comp #{"grumpy"}
                               #(cond-> %
                                  (string? %) (as-> $
@@ -33,7 +33,7 @@
 (defn grumpy-cat->happy-cat
   [cat]
   (-> cat
-      funzip-zipper/node->zipper
+      zipper/node->zipper
       (funzip/find (comp #{"grumpy"}
                          #(cond-> %
                             (string? %) (as-> $
