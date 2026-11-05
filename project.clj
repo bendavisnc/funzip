@@ -6,12 +6,17 @@
   :dependencies        [[org.clojure/clojure "1.12.6"]]
   :profiles            {:dev {:dependencies [[speclj "3.12.3"]
                                              [orchestra "2021.01.01-1"]
+                                             [org.clojure/test.check "1.1.1"]
                                              [thheller/shadow-cljs "2.28.20"]
+                                             [hiccup/hiccup "2.0.0"]
+                                             [taipei.404/html-to-hiccup "0.1.8"]
                                              [org.clojure/clojurescript
                                               "1.11.132"]],
                               :repl-options {:init-ns funzip.core-behavior},
                               :test-paths   ["behavior"]}}
-  :plugins             [[speclj "3.12.3"] [lein-auto "0.1.3"]]
+  :plugins             [[speclj "3.12.3"]
+                        [lein-auto "0.1.3"]
+                        [lein-exec "0.3.7"]]
   :aliases             {"test-continuously" ["auto" "spec" "-f" "d"]}
   :pom-addition        [:developers
                         [:developer
