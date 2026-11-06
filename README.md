@@ -25,47 +25,114 @@ This is a port from a Scala implementation that can be found here: [https://gith
 example usage:
 
 ```clojure
-(require '[funzip.core :as funzip]    ; The core api that includes all functions for navigation and modification
-         '[funzip.zipper :as zipper]) ; ns for raw data -> zipper
-(def typical-house-cat
+(require '[funzip.core :as funzip]   ; The core api that includes all
+                                     ; functions for navigation and
+                                     ; modification
+         '[funzip.zipper :as zipper] ; ns for raw data -> zipper
+         '[clojure.pprint :as pp])
+
+; vectors are the default data structure
+(def cat
   (-> :cat
-      (zipper/create-zipper)
+      zipper/create-zipper
+
+      ;; Give the cat a head and body.
       (funzip/insert-down-left [:head] [:body])
-      (funzip/insert-down-left [:cute-eyes] [:cute-nose] [:adorable-smile])
-      (funzip/move-up)
-      (funzip/move-right)
-      (funzip/insert-down-left [:soft-fur] [:playful-paws] [:bouncy-legs])
-      (funzip/commit)))
+
+      ;; Add some facial features.
+      (funzip/insert-down-left
+       [:eyes]
+       [:nose]
+       [:mouth])
+
+      ;; Move to the body.
+      funzip/move-up
+      funzip/move-right
+
+      ;; Give the cat some fur, paws, and legs.
+      (funzip/insert-down-left
+       [:fur]
+       [:paws]
+       [:legs])
+
+      funzip/commit))
+
+
+(assert (= [:cat
+            [[:head [[:eyes] [:nose] [:mouth]]]
+             [:body [[:fur] [:paws] [:legs]]]]]
+           cat))
+
+
 ```
 
 ```clojure
-; typical-house-cat
+(require '[funzip.core :as funzip]   ; The core api that includes all
+                                     ; functions for navigation and
+                                     ; modification
+         '[funzip.zipper :as zipper] ; ns for raw data -> zipper
+         '[funzip.protocols :as protocols]
+         '[clojure.pprint :as pp]
+         '[clojure.data.xml :as xml])
 
-[:cat [[:head [[:cute-eyes] [:cute-nose] [:adorable-smile]]]
-       [:body [[:soft-fur] [:playful-paws] [:bouncy-legs]]]]]
-```
 
-```clojure
-(def atypical-house-cat
-  (-> typical-house-cat
-      (zipper/node->zipper)
-      (funzip/find #(= :head (first %)))
-      (funzip/move-down)
-      (funzip/update #(assoc % 0 :laser-beam-eyes))
-      (funzip/move-right)
-      (funzip/move-right)
-      (funzip/set [:smirk-of-hitler])
-      (funzip/find #(= :body (first %)))
-      (funzip/set [:body])
-      (funzip/insert-down-right [:hyper-allergic-fur] [:ninja-assassin-paws] [:bionic-legs])
-      (funzip/commit)))
-```
+; the api can be extended with protocols to support additional kinds of data
 
-```clojure
-; atypical-house-cat
+(extend-type clojure.data.xml.Element
+ protocols/CanBeZipper
+   (unzip [this]
+     (:content this))
+   (zip [this children]
+     (assoc this :content children)))
 
-[:cat [[:head [[:laser-beam-eyes] [:cute-nose] [:smirk-of-hitler]]]
-       [:body [[:hyper-allergic-fur] [:ninja-assassin-paws] [:bionic-legs]]]]]
+(def cat
+  (->
+    (xml/element :cat)
+    zipper/node->zipper
+
+    ;; Give the cat a head and body.
+    (funzip/insert-down-left (xml/element :head)
+                             (xml/element :body))
+
+    ;; Add some facial features.
+    (funzip/insert-down-left
+     (xml/element :eyes)
+     (xml/element :nose)
+     (xml/element :mouth))
+
+    ;; Move to the body.
+    funzip/move-up
+    funzip/move-right
+
+    ;; Give the cat some fur, paws, and legs.
+    (funzip/insert-down-left
+     (xml/element :fur)
+     (xml/element :paws)
+     (xml/element :legs))
+
+    funzip/commit
+    xml/emit-str))
+
+
+(assert
+ (=
+  (->
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+      <cat>
+        <head>
+          <eyes></eyes>
+          <nose></nose>
+          <mouth></mouth>
+        </head>
+        <body>
+          <fur></fur>
+          <paws></paws>
+          <legs></legs>
+        </body>
+      </cat>"
+    xml/parse-str
+    xml/emit-str)
+  cat))
 ```
 
 ## Why?
