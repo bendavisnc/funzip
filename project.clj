@@ -10,6 +10,7 @@
                                              [thheller/shadow-cljs "2.28.20"]
                                              [hiccup/hiccup "2.0.0"]
                                              [taipei.404/html-to-hiccup "0.1.8"]
+                                             [org.clojure/data.xml "0.0.8"]
                                              [org.clojure/clojurescript
                                               "1.11.132"]],
                               :repl-options {:init-ns funzip.core-behavior},

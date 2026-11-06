@@ -1,6 +1,6 @@
-(require '[funzip.core :as funzip] ; The core api that includes all
-                                   ; functions for navigation and
-                                   ; modification
+(require '[funzip.core :as funzip]   ; The core api that includes all
+                                     ; functions for navigation and
+                                     ; modification
          '[funzip.zipper :as zipper] ; ns for raw data -> zipper
          '[clojure.pprint :as pp])
 
