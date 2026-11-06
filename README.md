@@ -9,6 +9,8 @@
 >  Anything you want to, do it; want to change the world... there's nothing to it."
 > - Willy Wonka, from "Willy Wonka and the Chocolate Factory" (1971)
 
+<br clear="right" /> 
+
 ## Installation
 In Leiningen:
 
